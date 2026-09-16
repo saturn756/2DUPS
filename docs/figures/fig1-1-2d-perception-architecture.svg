@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="890" viewBox="0 0 1900 890">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C8B9A"/>
+</marker>
+<style>text { font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Noto Sans CJK SC, sans-serif; }</style>
+</defs>
+<rect width="1900" height="890" fill="#FFFFFF"/>
+<text x="40" y="50" font-size="27" fill="#12314F" font-weight="700" text-anchor="start">图 1-1  单模态 2D 感知系统六大模块架构图</text>
+<text x="40" y="76" font-size="12.5" fill="#5B6B7A" font-weight="400" text-anchor="start">按经典模块化流水线组织：传感与标定 → 图像预处理 →｛特征匹配（定位）∥ 目标检测｝→ 多目标跟踪 → 语义分割与场景表示；实线为运行时数据流，虚线为可选几何依赖、质量门控反馈与评测依赖。</text>
+<rect x="235" y="100" width="1375" height="600" rx="16" ry="16" fill="#FBF3FA" fill-opacity="0.6" stroke="#A96BB0" stroke-width="1.6" stroke-dasharray="7 5"/>
+<rect x="251" y="87" width="470" height="26" rx="13" fill="#A96BB0"/>
+<text x="267" y="105" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="start">验证层（阶段六）安全监控、系统集成与测试</text>
+<rect x="40" y="340" width="155" height="170" rx="10" ry="10" fill="#F1F3F6" stroke="#8794A2" stroke-width="1.6"/>
+<text x="54" y="366" font-size="13" fill="#4A5A6A" font-weight="700" text-anchor="start">输入来源</text>
+<text x="54" y="392" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">公开道路 RGB</text>
+<text x="54" y="411" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">图像/视频</text>
+<text x="54" y="430" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">检测与分割标注</text>
+<text x="54" y="449" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">相机内参与</text>
+<text x="54" y="468" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标定板图像</text>
+<rect x="40" y="540" width="155" height="84" rx="10" ry="10" fill="#F1F3F6" stroke="#8794A2" stroke-width="1.6"/>
+<text x="54" y="566" font-size="13" fill="#4A5A6A" font-weight="700" text-anchor="start">标注与真值</text>
+<text x="54" y="588" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">仅用于模块级评分</text>
+<text x="54" y="605" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">与数据切片统计</text>
+<rect x="275" y="340" width="180" height="170" rx="10" ry="10" fill="#E8F1FB" stroke="#2F6FB0" stroke-width="1.6"/>
+<path d="M275 386 V350 A10 10 0 0 1 285 340 H445 A10 10 0 0 1 455 350 V386 Z" fill="#2F6FB0" fill-opacity="0.11"/>
+<rect x="287" y="349" width="34" height="20" rx="5" fill="#2F6FB0"/>
+<text x="304" y="364" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M1</text>
+<rect x="385" y="351" width="58" height="17" rx="8.5" fill="#2F6FB0" fill-opacity="0.16"/>
+<text x="414.0" y="363.5" font-size="10.5" fill="#2F6FB0" font-weight="700" text-anchor="middle">阶段二</text>
+<text x="287" y="382" font-size="13.5" fill="#2F6FB0" font-weight="700" text-anchor="start">道路图像采集与相机标定</text>
+<text x="287" y="410" font-size="11" fill="#2F6FB0" font-weight="700" text-anchor="start">·</text>
+<text x="296" y="410" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：OpenCV Zhang 平面标定</text>
+<text x="287" y="426.5" font-size="11" fill="#2F6FB0" font-weight="700" text-anchor="start">·</text>
+<text x="296" y="426.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">棋盘格采集 + 畸变校正</text>
+<text x="287" y="443.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：图像/视频、标注、相机参数</text>
+<text x="287" y="459.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：DatasetManifest、CalibratedFrame</text>
+<text x="287" y="476.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：重投影误差、标定可用率</text>
+<rect x="535" y="340" width="180" height="170" rx="10" ry="10" fill="#E8F1FB" stroke="#2F6FB0" stroke-width="1.6"/>
+<path d="M535 386 V350 A10 10 0 0 1 545 340 H705 A10 10 0 0 1 715 350 V386 Z" fill="#2F6FB0" fill-opacity="0.11"/>
+<rect x="547" y="349" width="34" height="20" rx="5" fill="#2F6FB0"/>
+<text x="564" y="364" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M2</text>
+<rect x="645" y="351" width="58" height="17" rx="8.5" fill="#2F6FB0" fill-opacity="0.16"/>
+<text x="674.0" y="363.5" font-size="10.5" fill="#2F6FB0" font-weight="700" text-anchor="middle">阶段三</text>
+<text x="547" y="382" font-size="13.5" fill="#2F6FB0" font-weight="700" text-anchor="start">图像预处理与质量评价</text>
+<text x="547" y="410" font-size="11" fill="#2F6FB0" font-weight="700" text-anchor="start">·</text>
+<text x="556" y="410" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：Zero-DCE Tiny（低照度）</text>
+<text x="547" y="426.5" font-size="11" fill="#2F6FB0" font-weight="700" text-anchor="start">·</text>
+<text x="556" y="426.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">CLAHE 基线；DnLUT 去噪对照</text>
+<text x="547" y="443.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：CalibratedFrame</text>
+<text x="547" y="459.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：ImageVariantSet、QualityReport</text>
+<text x="547" y="476.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：PSNR/SSIM/NIQE + 下游指标差</text>
+<rect x="795" y="120" width="190" height="170" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
+<path d="M795 166 V130 A10 10 0 0 1 805 120 H975 A10 10 0 0 1 985 130 V166 Z" fill="#2E8B6E" fill-opacity="0.11"/>
+<rect x="807" y="129" width="34" height="20" rx="5" fill="#2E8B6E"/>
+<text x="824" y="144" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M3</text>
+<rect x="915" y="131" width="58" height="17" rx="8.5" fill="#2E8B6E" fill-opacity="0.16"/>
+<text x="944.0" y="143.5" font-size="10.5" fill="#2E8B6E" font-weight="700" text-anchor="middle">阶段四</text>
+<text x="807" y="162" font-size="13.5" fill="#2E8B6E" font-weight="700" text-anchor="start">特征检测与局部特征匹配</text>
+<text x="807" y="190" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="190" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：SIFT + FLANN + RANSAC</text>
+<text x="807" y="206.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="206.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">XFeat（学习型对照）</text>
+<text x="807" y="223.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：ImageVariantSet（相邻帧图像对）</text>
+<text x="807" y="239.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：MatchResult（单应矩阵 H）</text>
+<text x="807" y="256.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：匹配点数、内点率、重投影误差</text>
+<rect x="795" y="340" width="190" height="170" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
+<path d="M795 386 V350 A10 10 0 0 1 805 340 H975 A10 10 0 0 1 985 350 V386 Z" fill="#2E8B6E" fill-opacity="0.11"/>
+<rect x="807" y="349" width="34" height="20" rx="5" fill="#2E8B6E"/>
+<text x="824" y="364" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M4</text>
+<rect x="915" y="351" width="58" height="17" rx="8.5" fill="#2E8B6E" fill-opacity="0.16"/>
+<text x="944.0" y="363.5" font-size="10.5" fill="#2E8B6E" font-weight="700" text-anchor="middle">阶段四</text>
+<text x="807" y="382" font-size="13.5" fill="#2E8B6E" font-weight="700" text-anchor="start">2D 目标检测</text>
+<text x="807" y="410" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="410" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：YOLOv12-N（官方实现）</text>
+<text x="807" y="426.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="426.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">备选 YOLOv12-S（精度优先）</text>
+<text x="807" y="443.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：ImageVariantSet（连续帧）</text>
+<text x="807" y="459.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：DetectionSet（逐帧实例）</text>
+<text x="807" y="476.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：mAP、AP-S、漏检率、帧率</text>
+<rect x="1065" y="340" width="190" height="170" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
+<path d="M1065 386 V350 A10 10 0 0 1 1075 340 H1245 A10 10 0 0 1 1255 350 V386 Z" fill="#2E8B6E" fill-opacity="0.11"/>
+<rect x="1077" y="349" width="34" height="20" rx="5" fill="#2E8B6E"/>
+<text x="1094" y="364" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M5</text>
+<rect x="1185" y="351" width="58" height="17" rx="8.5" fill="#2E8B6E" fill-opacity="0.16"/>
+<text x="1214.0" y="363.5" font-size="10.5" fill="#2E8B6E" font-weight="700" text-anchor="middle">阶段四–五</text>
+<text x="1077" y="382" font-size="13.5" fill="#2E8B6E" font-weight="700" text-anchor="start">多目标跟踪</text>
+<text x="1077" y="410" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="1086" y="410" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：ByteTrack（跟踪主选）</text>
+<text x="1077" y="426.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="1086" y="426.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">UCMCTrack（运动补偿升级）</text>
+<text x="1077" y="443.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：连续帧 DetectionSet、H</text>
+<text x="1077" y="459.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：TrackSet（轨迹身份与状态）</text>
+<text x="1077" y="476.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：MOTA/IDF1、ID Switch</text>
+<rect x="1335" y="330" width="240" height="225" rx="10" ry="10" fill="#FDF1DE" stroke="#C4832A" stroke-width="1.6"/>
+<path d="M1335 376 V340 A10 10 0 0 1 1345 330 H1565 A10 10 0 0 1 1575 340 V376 Z" fill="#C4832A" fill-opacity="0.11"/>
+<rect x="1347" y="339" width="34" height="20" rx="5" fill="#C4832A"/>
+<text x="1364" y="354" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M6</text>
+<rect x="1505" y="341" width="58" height="17" rx="8.5" fill="#C4832A" fill-opacity="0.16"/>
+<text x="1534.0" y="353.5" font-size="10.5" fill="#C4832A" font-weight="700" text-anchor="middle">阶段五</text>
+<text x="1347" y="372" font-size="12.5" fill="#C4832A" font-weight="700" text-anchor="start">2D 语义分割与场景拓扑推理</text>
+<text x="1347" y="400" font-size="11" fill="#C4832A" font-weight="700" text-anchor="start">·</text>
+<text x="1356" y="400" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：PIDNet-S（分割）</text>
+<text x="1347" y="416.5" font-size="11" fill="#C4832A" font-weight="700" text-anchor="start">·</text>
+<text x="1356" y="416.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">规则化 2D 场景图（关系推理）</text>
+<text x="1347" y="433.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：图像版本、TrackSet、标定状态</text>
+<text x="1347" y="449.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：SegmentationMap、SceneGraph2D</text>
+<text x="1347" y="466.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：mIoU、关系准确率、图合法率</text>
+<rect x="1655" y="340" width="220" height="120" rx="12" ry="12" fill="#E4EEF8" stroke="#2F6FB0" stroke-width="2.0"/>
+<text x="1670" y="366" font-size="14" fill="#2F6FB0" font-weight="700" text-anchor="start">结构化场景描述</text>
+<text x="1670" y="386" font-size="10.6" fill="#5B6B7A" font-weight="400" text-anchor="start">场景关系图（SceneGraph2D），节点引用</text>
+<text x="1670" y="401" font-size="10.6" fill="#5B6B7A" font-weight="400" text-anchor="start">轨迹与区域 ID：对象所属区域、左/右、</text>
+<text x="1670" y="416" font-size="10.6" fill="#5B6B7A" font-weight="400" text-anchor="start">前/后、相邻与冲突，每条边携带</text>
+<text x="1670" y="431" font-size="10.6" fill="#5B6B7A" font-weight="400" text-anchor="start">evidence 与 confidence</text>
+<rect x="1655" y="560" width="220" height="95" rx="12" ry="12" fill="#F1F3F6" stroke="#8794A2" stroke-width="1.8"/>
+<text x="1670" y="586" font-size="13" fill="#4A5A6A" font-weight="700" text-anchor="start">EvaluationRecord</text>
+<text x="1670" y="608" font-size="10.8" fill="#5B6B7A" font-weight="400" text-anchor="start">按数据切片汇总的模块指标、延迟、</text>
+<text x="1670" y="624" font-size="10.8" fill="#5B6B7A" font-weight="400" text-anchor="start">失败标签与降级状态，可追溯到样本</text>
+<polyline points="195,425 275,425" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="455,425 535,425" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="625,340 625,215 795,215" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="715,425 795,425" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="985,425 1065,425" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1255,425 1335,425" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="985,240 1160,240 1160,340" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<polyline points="985,205 1455,205 1455,320" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<polyline points="625,510 625,600 1430,600 1430,560" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="365,510 365,645 1390,645 1390,560" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<polyline points="1575,425 1655,425" fill="none" stroke="#7C8B9A" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="195,580 235,580" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<polyline points="1610,605 1655,605" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="670,690 670,510" fill="none" stroke="#7C8B9A" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<rect x="444.325" y="405.5" width="101.35" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="495" y="419" font-size="10.5" fill="#2F6FB0" font-weight="400" text-anchor="middle">CalibratedFrame</text>
+<rect x="627.485" y="195.5" width="145.02999999999997" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="700" y="209" font-size="10.5" fill="#2E8B6E" font-weight="400" text-anchor="middle">ImageVariantSet（图像对）</text>
+<rect x="704.325" y="405.5" width="101.35" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="755" y="419" font-size="10.5" fill="#2E8B6E" font-weight="400" text-anchor="middle">ImageVariantSet</text>
+<rect x="983.46" y="405.5" width="83.08" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1025" y="419" font-size="10.5" fill="#C4832A" font-weight="400" text-anchor="middle">DetectionSet</text>
+<rect x="1263.64" y="385.5" width="58.72" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1293" y="399" font-size="10.5" fill="#C4832A" font-weight="400" text-anchor="middle">TrackSet</text>
+<rect x="1573.46" y="405.5" width="83.08" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1615" y="419" font-size="10.5" fill="#2F6FB0" font-weight="400" text-anchor="middle">SceneGraph2D</text>
+<rect x="1022.37" y="220.5" width="95.25999999999999" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1070" y="234" font-size="10.5" fill="#8A98A6" font-weight="400" text-anchor="middle">MatchResult（H）</text>
+<rect x="1188.5" y="185.5" width="73.0" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1225" y="199" font-size="10.5" fill="#8A98A6" font-weight="400" text-anchor="middle">可选几何证据</text>
+<rect x="952.235" y="580.5" width="155.52999999999997" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="1030" y="594" font-size="10.5" fill="#2E8B6E" font-weight="400" text-anchor="middle">ImageVariantSet（分割输入）</text>
+<rect x="822.235" y="625.5" width="155.52999999999997" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="900" y="639" font-size="10.5" fill="#8A98A6" font-weight="400" text-anchor="middle">CalibratedFrame（标定状态）</text>
+<rect x="680" y="648.5" width="176.52999999999997" height="17.5" rx="3.5" fill="#FFFFFF" fill-opacity="0.95"/>
+<text x="680" y="662" font-size="10.5" fill="#A96BB0" font-weight="400" text-anchor="start">enable_decision（质量门控反馈）</text>
+<rect x="40" y="650" width="176" height="66" rx="8" fill="#FFFFFF" stroke="#D7DEE6"/>
+<text x="52" y="670" font-size="12" fill="#4A5A6A" font-weight="700" text-anchor="start">图例</text>
+<line x1="52" y1="684" x2="84" y2="684" stroke="#7C8B9A" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="92" y="688" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">运行时数据流</text>
+<line x1="52" y1="703" x2="84" y2="703" stroke="#7C8B9A" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="92" y="707" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">可选/控制/评测依赖</text>
+<line x1="40" y1="740" x2="1860" y2="740" stroke="#D7DEE6" stroke-width="1.2"/>
+<text x="40" y="764" font-size="12" fill="#2F4A63" font-weight="600" text-anchor="start">与经典模块化流水线的对应（Grigorescu 等, J. Field Robotics 2020）：§4.1 传感硬件与标定 = M1　｜　图像预处理 = M2　｜　§4.2.3 定位与自运动估计 = M3　｜　§4.2.1 目标检测 = M4　｜　多目标跟踪 = M5　｜　§4.2.2 语义分割 + §4.3 场景表示 = M6</text>
+<text x="40" y="786" font-size="11.5" fill="#5B6B7A" font-weight="400" text-anchor="start">裁剪说明：High-Level Path Planning、Behavior Arbitration、Motion Controllers 不纳入本课程范围；定位建图（SLAM）由 M1 标定与 M3 几何估计承担；阶段六验证层对应经典架构中的 Safety Monitor。</text>
+</svg>
