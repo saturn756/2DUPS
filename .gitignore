@@ -6,11 +6,18 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+*.egg-info/
 
-# 运行产物
+# 运行产物与数据（目录占位保留，内容不入库）
 logs/*
 !logs/.gitkeep
+outputs/*
+!outputs/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
 runs/
-outputs/
-data/
 *.log

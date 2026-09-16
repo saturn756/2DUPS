@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "twodups"
+version = "0.1.0"
+description = "单模态 2D 感知系统（《机器视觉》课程项目）"
+requires-python = ">=3.10"
+# 依赖统一维护在 requirements.txt
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"

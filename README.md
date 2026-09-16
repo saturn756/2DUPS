@@ -23,14 +23,47 @@
 ## 目录
 
 ```
-configs/            各模块配置（一个模块一份，公共项在 common.yaml）
-docs/               架构、数据流、接口、方法与图
-logs/               运行日志与评测产物（不入库）
-requirements.txt    项目依赖
+configs/            各模块配置（一模块一份 + common.yaml）
+docs/               架构、数据流、接口、方法、图
+src/twodups/        代码包
+scripts/            命令行入口
+tests/              测试
+notebooks/          实验与可视化
+logs/               运行日志（不入库）
+outputs/            链路输出与评测记录（不入库）
+data/               数据 raw / interim / processed（不入库）
+requirements.txt    依赖
+pyproject.toml      包与工具配置
+```
+
+## 代码结构
+
+```
+src/twodups/
+├── contracts/    接口契约 I1–I9：字段、状态枚举与大对象引用
+├── modules/      六个模块，每个含 module.py（入口）与 impl_*.py（选定 / 对照实现）
+├── pipeline/     编排：registry（实现注册表）+ runner（按边串联）
+├── evaluation/   数据切片、模块指标与 EvaluationRecord
+├── data/         数据清单（I1）读取与校验
+└── utils/        配置加载与日志
+```
+
+约定：模块之间只通过 `contracts` 中的接口通信；换实现不改接口，靠配置里的 `impl` 切换。
+
+## 开发
+
+```bash
+pip install -r requirements.txt
+
+python scripts/check_contracts.py                                   # 打印 9 个接口与字段
+python scripts/run_pipeline.py --module-config configs/m5_segmentation.yaml --dry-run
+python scripts/evaluate.py --list-slices
+pytest                                                              # 契约与配置冒烟测试
 ```
 
 ## 状态
 
-阶段一（文献调研与系统架构设计）已完成；模块实现待开始。
+阶段一（文献调研与系统架构设计）已完成；模块实现待开始，填充顺序见
+[实施规划](docs/architecture/05_实施规划.md)。
 
 许可：Apache License 2.0，见 [LICENSE](LICENSE)。
