@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="780" viewBox="0 0 1680 780">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="#7A8B99"/>
+</marker>
+<marker id="arrowOpt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="#98A5B0"/>
+</marker>
+<style>text { font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Noto Sans CJK SC, sans-serif; }</style>
+</defs>
+<rect width="1680" height="780" fill="#FFFFFF"/>
+<text x="40" y="52" font-size="27" fill="#12314F" text-anchor="start" font-weight="700">单模态 2D 感知系统架构</text>
+<text x="40" y="78" font-size="12.5" fill="#5B6B7A" text-anchor="start" font-weight="400">六个模块的功能与数据流（虚线为可选输入）</text>
+<rect x="40" y="320" width="150" height="150" rx="12" fill="#F2F5F8" stroke="#6E7F8D" stroke-width="1.6"/>
+<text x="54" y="350" font-size="14" fill="#3C4C5C" text-anchor="start" font-weight="700">输入源</text>
+<text x="54" y="374" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">道路 RGB 图像/视频</text>
+<text x="54" y="392" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">相机参数（可选）</text>
+<text x="54" y="410" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">标注与真值（仅评测）</text>
+<rect x="240" y="320" width="180" height="150" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="254" y="333" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="281" y="349" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M1</text>
+<text x="254" y="382" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">采集与相机标定</text>
+<text x="254" y="406" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">组织输入样本，建立统一</text>
+<text x="254" y="425" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">图像坐标系与标定状态</text>
+<rect x="500" y="320" width="180" height="150" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="514" y="333" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="541" y="349" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M2</text>
+<text x="514" y="382" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">图像预处理与质量评价</text>
+<text x="514" y="406" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">产出可用的图像版本，</text>
+<text x="514" y="425" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">给出质量结论与门控决策</text>
+<rect x="800" y="105" width="220" height="125" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="814" y="118" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="841" y="134" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M3</text>
+<text x="814" y="167" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">几何特征提取与自运动估计</text>
+<text x="814" y="191" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">由图像对估计帧间几何变换与</text>
+<text x="814" y="210" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">自车运动，输出几何可信度</text>
+<rect x="800" y="290" width="220" height="210" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="814" y="303" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="841" y="319" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M4</text>
+<text x="814" y="352" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">多目标检测与跟踪</text>
+<text x="814" y="376" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">① 检测：逐帧给出实例级目标</text>
+<text x="814" y="395" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">　　（类别、位置、置信度）</text>
+<text x="814" y="414" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">② 跟踪：跨帧关联，输出带身份</text>
+<text x="814" y="433" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">　　与状态的轨迹</text>
+<rect x="800" y="560" width="220" height="125" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="814" y="573" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="841" y="589" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M5</text>
+<text x="814" y="622" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">语义分割</text>
+<text x="814" y="646" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">输出像素级区域结构（道路、</text>
+<text x="814" y="665" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">可行驶区域、车道标线等）</text>
+<rect x="1120" y="290" width="240" height="210" rx="12" fill="#EAF2FB" stroke="#2F6FB0" stroke-width="1.8"/>
+<rect x="1134" y="303" width="54" height="23" rx="11.5" fill="#2F6FB0"/>
+<text x="1161" y="319" font-size="12.5" fill="#FFFFFF" text-anchor="middle" font-weight="700">M6</text>
+<text x="1134" y="352" font-size="15" fill="#2F6FB0" text-anchor="start" font-weight="700">场景理解与拓扑推理</text>
+<text x="1134" y="376" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">融合轨迹、区域与几何证据，</text>
+<text x="1134" y="395" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">输出对象—区域关系图</text>
+<text x="1134" y="414" font-size="11.8" fill="#5B6B7A" text-anchor="start" font-weight="400">（关系类型 + 证据 + 置信度）</text>
+<rect x="1440" y="330" width="190" height="130" rx="12" fill="#F2F5F8" stroke="#6E7F8D" stroke-width="1.6"/>
+<text x="1454" y="360" font-size="14" fill="#3C4C5C" text-anchor="start" font-weight="700">结构化场景描述</text>
+<text x="1454" y="384" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">SceneGraph2D：</text>
+<text x="1454" y="402" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">节点（对象/区域/轨迹）</text>
+<text x="1454" y="420" font-size="11.5" fill="#5B6B7A" text-anchor="start" font-weight="400">关系 + 证据 + 置信度</text>
+<path d="M 190 395 L 240 395" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="418.0" y="374" width="94.00000000000001" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="465" y="386" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">CalibratedFrame</text>
+<path d="M 420 395 L 500 395" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 590 320 L 590 167 L 800 167" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="591.0" y="146" width="208.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="695" y="158" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">ImageVariantSet（图像对）</text>
+<path d="M 680 395 L 800 395" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="693.0" y="374" width="94.00000000000001" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="740" y="386" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">ImageVariantSet</text>
+<path d="M 590 470 L 590 622 L 800 622" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="648.0" y="601" width="94.00000000000001" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="695" y="613" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">ImageVariantSet</text>
+<path d="M 1020 395 L 1120 395" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1042.6" y="374" width="54.800000000000004" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="1070" y="386" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">TrackSet</text>
+<path d="M 1020 622 L 1240 622 L 1240 500" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1083.0" y="601" width="94.00000000000001" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="1130" y="613" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">SegmentationMap</text>
+<path d="M 1360 395 L 1440 395" fill="none" stroke="#7A8B99" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1361.4" y="374" width="77.2" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="1400" y="386" font-size="10" fill="#5B6B7A" text-anchor="middle" font-weight="400">SceneGraph2D</text>
+<path d="M 910 230 L 910 290" fill="none" stroke="#98A5B0" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowOpt)"/>
+<rect x="915" y="250" width="158.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="920" y="262" font-size="10" fill="#98A5B0" text-anchor="start" font-weight="400">MatchResult（可选）</text>
+<path d="M 1020 167 L 1240 167 L 1240 290" fill="none" stroke="#98A5B0" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowOpt)"/>
+<rect x="1085.4" y="146" width="89.2" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="1130" y="158" font-size="10" fill="#98A5B0" text-anchor="middle" font-weight="400">几何证据（可选）</text>
+<path d="M 330 470 L 330 700 L 1320 700 L 1320 500" fill="none" stroke="#98A5B0" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrowOpt)"/>
+<rect x="655.4" y="679" width="89.2" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.96"/>
+<text x="700" y="691" font-size="10" fill="#98A5B0" text-anchor="middle" font-weight="400">标定状态（可选）</text>
+</svg>
