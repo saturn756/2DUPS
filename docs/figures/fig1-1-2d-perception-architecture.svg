@@ -50,20 +50,22 @@
 <text x="547" y="453.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：CalibratedFrame</text>
 <text x="547" y="469.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：ImageVariantSet、QualityReport</text>
 <text x="547" y="486.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：PSNR/SSIM/NIQE + 下游指标差</text>
-<rect x="795" y="130" width="190" height="150" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
-<path d="M795 176 V140 A10 10 0 0 1 805 130 H975 A10 10 0 0 1 985 140 V176 Z" fill="#2E8B6E" fill-opacity="0.11"/>
-<rect x="807" y="139" width="34" height="20" rx="5" fill="#2E8B6E"/>
-<text x="824" y="154" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M3</text>
-<rect x="915" y="141" width="58" height="17" rx="8.5" fill="#2E8B6E" fill-opacity="0.16"/>
-<text x="944.0" y="153.5" font-size="10.5" fill="#2E8B6E" font-weight="700" text-anchor="middle">阶段四</text>
-<text x="807" y="172" font-size="13.5" fill="#2E8B6E" font-weight="700" text-anchor="start">特征检测与局部特征匹配</text>
-<text x="807" y="200" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
-<text x="816" y="200" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：SIFT + FLANN + RANSAC</text>
-<text x="807" y="216.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
-<text x="816" y="216.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">XFeat（学习型对照）</text>
-<text x="807" y="233.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：图像对（相邻帧）</text>
-<text x="807" y="249.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：MatchResult（单应矩阵 H）</text>
-<text x="807" y="266.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：内点率、重投影误差</text>
+<rect x="795" y="122" width="190" height="162" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
+<path d="M795 168 V132 A10 10 0 0 1 805 122 H975 A10 10 0 0 1 985 132 V168 Z" fill="#2E8B6E" fill-opacity="0.11"/>
+<rect x="807" y="131" width="34" height="20" rx="5" fill="#2E8B6E"/>
+<text x="824" y="146" font-size="12.5" fill="#FFFFFF" font-weight="700" text-anchor="middle">M3</text>
+<rect x="915" y="133" width="58" height="17" rx="8.5" fill="#2E8B6E" fill-opacity="0.16"/>
+<text x="944.0" y="145.5" font-size="10.5" fill="#2E8B6E" font-weight="700" text-anchor="middle">阶段四</text>
+<text x="807" y="164" font-size="13.5" fill="#2E8B6E" font-weight="700" text-anchor="start">特征检测与局部特征匹配</text>
+<text x="807" y="192" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="192" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">选定：SIFT + FLANN + RANSAC</text>
+<text x="807" y="208.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="208.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">XFeat（学习型对照）</text>
+<text x="807" y="225.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：图像对（相邻帧）</text>
+<text x="807" y="241.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：MatchResult（单应矩阵 H）</text>
+<text x="807" y="258.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：内点率、重投影误差</text>
+<text x="807" y="274.5" font-size="11" fill="#2E8B6E" font-weight="700" text-anchor="start">·</text>
+<text x="816" y="274.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">唯一跨帧模块：供 M5 运动补偿、M6b 几何证据</text>
 <rect x="795" y="350" width="190" height="150" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
 <path d="M795 396 V360 A10 10 0 0 1 805 350 H975 A10 10 0 0 1 985 360 V396 Z" fill="#2E8B6E" fill-opacity="0.11"/>
 <rect x="807" y="359" width="34" height="20" rx="5" fill="#2E8B6E"/>
@@ -91,7 +93,7 @@
 <text x="816" y="656.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">移动端轻量分割（对照）</text>
 <text x="807" y="673.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">入：ImageVariantSet</text>
 <text x="807" y="689.5" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">出：SegmentationMap（区域掩码）</text>
-<text x="807" y="706.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：mIoU、边界 IoU</text>
+<text x="807" y="706.0" font-size="10.5" fill="#5B6B7A" font-weight="400" text-anchor="start">标：mIoU、边界 IoU、车道 F1</text>
 <rect x="1075" y="350" width="190" height="150" rx="10" ry="10" fill="#E6F4EF" stroke="#2E8B6E" stroke-width="1.6"/>
 <path d="M1075 396 V360 A10 10 0 0 1 1085 350 H1255 A10 10 0 0 1 1265 360 V396 Z" fill="#2E8B6E" fill-opacity="0.11"/>
 <rect x="1087" y="359" width="34" height="20" rx="5" fill="#2E8B6E"/>
