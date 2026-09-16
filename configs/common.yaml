@@ -1,0 +1,30 @@
+# 全链路公共配置（骨架）
+# 与各模块配置（m1_*.yaml … m6_*.yaml）组合使用；键名先固定，取值待实施方案确定。
+
+project: 2DUPS
+stage: 1                      # 当前处于阶段一（架构设计）
+interface_version: "1.0"      # 对应 docs/interface/04_接口规范.md
+
+# 数据清单：版本、切分、来源与许可、切片标签（DatasetManifest / I1）
+dataset:
+  manifest: configs/dataset_manifest.yaml    # 待建
+  name: BDD100K                               # 主数据集
+  supplements: [Cityscapes, KITTI]            # 分割类别体系 / 相机参数
+
+# 对齐与版本策略
+alignment:
+  frame_key: frame_id
+  variant_key: variant_id
+  variant_policy: same_for_all_branches       # M2 决定默认版本，三条支路必须一致
+  allow_future_frames: false
+
+# 运行与日志
+runtime:
+  log_dir: logs
+  log_level: INFO
+
+# 评测与验证
+evaluation:
+  slices: [normal, low_light, blur, occlusion, far, camera_motion, calibration_missing]
+  failure_tags: true
+  record: EvaluationRecord                    # I9

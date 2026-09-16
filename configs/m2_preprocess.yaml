@@ -1,0 +1,21 @@
+# M2 图像预处理与质量评价（骨架）
+module: M2
+name: 图像预处理与质量评价
+
+impl:
+  selected: zero_dce_tiny          # 低照度增强
+  baseline: clahe                  # 可解释基线
+  contrast: semantic_hsv_guided    # 对照实现
+
+io:
+  inputs: [CalibratedFrame]                        # I2
+  outputs: [ImageVariantSet, QualityReport]        # I3
+
+# 待填（阶段三）：处理手段与强度、质量指标集合、门控阈值、对照方案
+params:
+  variants: [raw, enhanced]        # raw 版本必须始终存在
+  quality_metrics: []              # 待填：PSNR/SSIM/NIQE 等
+  gate: {}                         # 待填：门控规则与阈值
+  compare_downstream: true         # 验收以处理后下游指标是否劣化为准
+
+producer_ref: null

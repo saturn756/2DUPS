@@ -1,0 +1,23 @@
+# M6 场景理解与拓扑推理（骨架）
+module: M6
+name: 场景理解与拓扑推理
+
+impl:
+  selected: rule_based_scene_graph   # 规则化 2D 场景图
+  contrast: []                       # 端到端拓扑推理作为能力上限参照
+
+io:
+  inputs: [TrackSet, SegmentationMap, MatchResult_optional, calibration_status]
+  outputs: [SceneGraph2D]            # I8（唯一对外契约）
+
+# 待填（阶段五）：关系类型集合与判定规则、证据类型与置信度口径、降级判定条件
+params:
+  window:
+    length: null                   # 待填：帧窗口长度，须与评测切片口径一致
+    wait_timeout: null
+  node_types: [object, region, track]
+  relations: [membership, front_behind, left_right, adjacent, conflict]
+  geometry_status_levels: [full, degraded, image_plane]
+  evidence_required: true          # 只输出证据充分的关系
+
+producer_ref: null

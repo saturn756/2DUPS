@@ -1,0 +1,32 @@
+# M4 多目标检测与跟踪（骨架）
+# 检测子块与跟踪子块共用本模块边界，但指标必须分开统计
+module: M4
+name: 多目标检测与跟踪
+
+impl:
+  detection:
+    selected: yolov12_n            # 同族尺度 N/S/M/L/X 对照后选定 N
+    contrast: [yolo26_n]
+  tracking:
+    selected: bytetrack            # 低分框二次关联
+    upgrade: ucmctrack             # 相机运动补偿
+    contrast: [oc_sort]
+
+io:
+  inputs: [ImageVariantSet, MatchResult_optional]  # I3；I4 仅供跟踪子块
+  outputs: [DetectionSet, TrackSet]                # I5（对外可读）/ I6
+
+# 待填（阶段四）：检测实现与规模、类别集合、关联代价设计、置信度阈值
+params:
+  detection:
+    classes: []                    # 待填：类别集合（引用类别模式）
+    score_threshold: null
+    nms: {}
+  tracking:
+    high_threshold: 0.6            # 高/低分框划分
+    match_threshold: 0.2           # IoU 低于该值拒绝匹配
+    max_lost_frames: 30            # 丢失超过该帧数才删除
+    use_geometry_compensation: true
+    state_levels: [tracked, lost, new, unreliable]
+
+producer_ref: null

@@ -1,0 +1,31 @@
+# 2DUPS 项目依赖
+# 骨架阶段只列确定要用的基础库；各模块实现选定后再逐项补充并锁定版本。
+# 约定：新增依赖请注明归属模块，例如 "# M4: ultralytics"
+
+# ---- 基础 ----
+numpy
+opencv-python
+PyYAML
+tqdm
+
+# ---- 数据与评测 ----
+pandas
+openpyxl
+pillow
+matplotlib
+
+# ---- M2 图像增强与去噪 ----
+# torch
+# torchvision
+
+# ---- M3 特征检测与匹配 ----
+# （SIFT/FLANN 由 opencv-python 提供；XFeat 对照实现按官方仓库引入）
+
+# ---- M4 目标检测与跟踪 ----
+# ultralytics
+
+# ---- M5 语义分割 ----
+# （PIDNet 以官方仓库为准，按需引入）
+
+# ---- M6 拓扑推理 ----
+# （规则化实现，暂无额外依赖）

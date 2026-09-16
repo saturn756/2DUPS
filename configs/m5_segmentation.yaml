@@ -1,0 +1,20 @@
+# M5 语义分割（骨架）
+module: M5
+name: 语义分割
+
+impl:
+  selected: pidnet_s               # Cityscapes 预训练
+  contrast: [pp_mobileseg, sctnet]
+
+io:
+  inputs: [ImageVariantSet]        # I3
+  outputs: [SegmentationMap]       # I7
+
+# 待填（阶段五）：分割实现与规模、类别集合与映射表、边界与细长结构评价口径
+params:
+  class_schema: null               # 待填：类别模式引用（禁止按编号猜语义）
+  input_resolution: null
+  report_lane_f1: true             # 车道标线作为类别子集，需要时单独报告
+  boundary_metric: null
+
+producer_ref: null

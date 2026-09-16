@@ -1,0 +1,21 @@
+# M3 几何特征提取与自运动估计（骨架）
+module: M3
+name: 几何特征提取与自运动估计
+
+impl:
+  selected: sift_flann_ransac      # SIFT + FLANN + RANSAC
+  contrast: xfeat                  # 轻量学习型对照
+
+io:
+  inputs: [ImageVariantSet]        # 图像对（相邻两帧，同一 variant_id）
+  outputs: [MatchResult]           # I4（可选边，供 M4 跟踪与 M6）
+
+# 待填（阶段四）：特征与匹配方式、外点剔除策略、可用性判据与阈值
+params:
+  pair: adjacent                   # pair(t-1, t)，结果只用于 t 帧及之后
+  ratio_test: 0.8
+  ransac: {}                       # 待填：阈值、置信度、最大迭代
+  status_levels: [ok, unreliable, failed]
+  min_inlier_ratio: null           # 待填
+
+producer_ref: null
