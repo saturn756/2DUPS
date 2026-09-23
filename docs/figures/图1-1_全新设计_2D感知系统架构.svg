@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#687B8A"/>
+  </marker>
+  <marker id="arrowOptional" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#9AA7B1"/>
+  </marker>
+  <style>
+    text { font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Noto Sans CJK SC, sans-serif; }
+    .title { font-size: 32px; font-weight: 700; fill: #173A59; }
+    .subtitle { font-size: 14px; fill: #617483; }
+    .stage { font-size: 15px; font-weight: 700; fill: #557080; }
+    .module-title { font-size: 19px; font-weight: 700; fill: #1E619E; }
+    .module-copy { font-size: 13px; fill: #536A79; }
+    .small-copy { font-size: 12px; fill: #71828E; }
+    .interface { font-size: 12px; fill: #5B6F7E; }
+    .tag { font-size: 13px; font-weight: 700; fill: #FFFFFF; }
+    .boundary { font-size: 12.5px; font-weight: 700; fill: #735E9A; }
+    .metric { font-size: 12px; fill: #546A79; }
+  </style>
+</defs>
+
+<rect width="1800" height="1080" fill="#FFFFFF"/>
+<text x="60" y="58" class="title">2D 感知系统：从输入契约到场景结构</text>
+<text x="60" y="88" class="subtitle">全新分层视图：输入接入 → 版本化处理 → 三条 2D 感知支路 → 证据约束下的结构融合</text>
+
+<!-- Four architectural zones -->
+<rect x="40" y="140" width="300" height="720" rx="18" fill="#F6F8FA" stroke="#D8E0E6"/>
+<rect x="370" y="140" width="340" height="720" rx="18" fill="#F4F8FC" stroke="#D1E0EB"/>
+<rect x="740" y="140" width="600" height="720" rx="18" fill="#F8FBFD" stroke="#D1E0EB"/>
+<rect x="1370" y="140" width="390" height="720" rx="18" fill="#FBF9FD" stroke="#DED4EC"/>
+
+<text x="66" y="180" class="stage">A · 输入接入</text>
+<text x="396" y="180" class="stage">B · 版本与质量门控</text>
+<text x="766" y="180" class="stage">C · 2D 感知支路</text>
+<text x="1396" y="180" class="stage">D · 结构化融合</text>
+
+<!-- A: source and M1 -->
+<rect x="70" y="250" width="240" height="175" rx="14" fill="#FFFFFF" stroke="#7B8D99" stroke-width="2"/>
+<text x="94" y="288" font-size="18" font-weight="700" fill="#3C5667">外部输入</text>
+<text x="94" y="324" class="module-copy">RGB 视频 / 图像序列</text>
+<text x="94" y="349" class="module-copy">可选标定文件</text>
+<text x="94" y="374" class="module-copy">DatasetManifest</text>
+<text x="94" y="402" class="small-copy">标注与真值仅进入评测层</text>
+
+<rect x="70" y="540" width="240" height="205" rx="14" fill="#EAF3FC" stroke="#3980B9" stroke-width="2"/>
+<rect x="90" y="562" width="55" height="26" rx="13" fill="#3980B9"/>
+<text x="117" y="581" text-anchor="middle" class="tag">M1</text>
+<text x="90" y="622" class="module-title">输入接入</text>
+<text x="90" y="647" class="module-title">与标定状态管理</text>
+<text x="90" y="683" class="module-copy">sequence_id / frame_id</text>
+<text x="90" y="708" class="module-copy">calibration: valid / missing / stale</text>
+
+<!-- B: M2 -->
+<rect x="410" y="365" width="260" height="250" rx="14" fill="#EAF3FC" stroke="#3980B9" stroke-width="2"/>
+<rect x="432" y="389" width="55" height="26" rx="13" fill="#3980B9"/>
+<text x="459" y="408" text-anchor="middle" class="tag">M2</text>
+<text x="432" y="450" class="module-title">输入规范化</text>
+<text x="432" y="475" class="module-title">与质量评价</text>
+<text x="432" y="515" class="module-copy">raw 永远保留</text>
+<text x="432" y="540" class="module-copy">可选 rectified / enhanced</text>
+<line x1="432" y1="558" x2="648" y2="558" stroke="#B7D0E3"/>
+<text x="432" y="585" font-size="13" font-weight="700" fill="#3C6B8C">default_variant</text>
+
+<!-- C: M3 -->
+<rect x="790" y="220" width="500" height="145" rx="14" fill="#EEF7FE" stroke="#3980B9" stroke-width="2"/>
+<rect x="812" y="242" width="55" height="26" rx="13" fill="#3980B9"/>
+<text x="839" y="261" text-anchor="middle" class="tag">M3</text>
+<text x="812" y="304" class="module-title">帧间几何估计</text>
+<text x="812" y="334" class="module-copy">相邻帧匹配 → RANSAC → image_plane_transform</text>
+<text x="812" y="354" class="small-copy">只作为跟踪补偿 / 几何状态证据，不等同于真实自运动</text>
+
+<!-- C: M4 -->
+<rect x="790" y="420" width="500" height="205" rx="14" fill="#EEF7FE" stroke="#3980B9" stroke-width="2"/>
+<rect x="812" y="442" width="55" height="26" rx="13" fill="#3980B9"/>
+<text x="839" y="461" text-anchor="middle" class="tag">M4</text>
+<text x="812" y="503" class="module-title">多目标检测与跟踪</text>
+<rect x="812" y="525" width="215" height="74" rx="9" fill="#FFFFFF" stroke="#A8C5DC"/>
+<text x="830" y="550" font-size="14" font-weight="700" fill="#3A6685">检测子块</text>
+<text x="830" y="575" class="module-copy">全图逐帧 → DetectionSet</text>
+<rect x="1050" y="525" width="215" height="74" rx="9" fill="#FFFFFF" stroke="#A8C5DC"/>
+<text x="1068" y="550" font-size="14" font-weight="700" fill="#3A6685">跟踪子块</text>
+<text x="1068" y="575" class="module-copy">关联历史 → TrackSet</text>
+
+<!-- C: M5 -->
+<rect x="790" y="680" width="500" height="145" rx="14" fill="#EEF7FE" stroke="#3980B9" stroke-width="2"/>
+<rect x="812" y="702" width="55" height="26" rx="13" fill="#3980B9"/>
+<text x="839" y="721" text-anchor="middle" class="tag">M5</text>
+<text x="812" y="764" class="module-title">全图逐帧语义分割</text>
+<text x="812" y="794" class="module-copy">像素类别 → SegmentationMap → 映射回源帧坐标</text>
+
+<!-- D: M6 and output -->
+<rect x="1400" y="270" width="330" height="360" rx="14" fill="#F3ECFB" stroke="#7961A5" stroke-width="2.2"/>
+<rect x="1424" y="294" width="55" height="26" rx="13" fill="#7961A5"/>
+<text x="1451" y="313" text-anchor="middle" class="tag">M6</text>
+<text x="1424" y="355" font-size="19" font-weight="700" fill="#674B97">2D 场景结构融合</text>
+<text x="1424" y="390" class="module-copy">① 检查帧 / 版本 / 坐标对齐</text>
+<text x="1424" y="416" class="module-copy">② 建立 track / region 节点</text>
+<text x="1424" y="442" class="module-copy">③ 生成有证据的 2D 关系</text>
+<line x1="1424" y1="464" x2="1706" y2="464" stroke="#CBBBDD"/>
+<text x="1424" y="494" class="boundary">belongs_to · left/right · overlaps</text>
+<text x="1424" y="522" class="boundary">不输出深度 / 距离 / TTC / 风险</text>
+<text x="1424" y="554" class="small-copy">geometry_status:</text>
+<text x="1530" y="554" class="small-copy">image_plane / degraded</text>
+<text x="1424" y="590" font-size="12" fill="#806DA0">证据 + 置信度 + 降级原因</text>
+
+<rect x="1400" y="680" width="330" height="145" rx="14" fill="#FFFFFF" stroke="#7961A5" stroke-width="2"/>
+<text x="1424" y="720" font-size="18" font-weight="700" fill="#674B97">对外契约</text>
+<text x="1424" y="755" font-size="15" font-weight="700" fill="#536A79">SceneGraph2D</text>
+<text x="1424" y="784" class="module-copy">nodes + edges + evidence + confidence</text>
+<text x="1424" y="808" class="small-copy">当前帧或明确窗口；不使用未来帧</text>
+
+<!-- Main data flows -->
+<path d="M 190 425 L 190 540" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="204" y="490" class="interface">输入序列</text>
+
+<path d="M 310 642 L 360 642 L 360 490 L 410 490" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="318" y="625" class="interface">CalibratedFrame</text>
+
+<!-- branch distribution rail -->
+<path d="M 670 490 L 730 490 L 730 292 L 790 292" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<path d="M 730 490 L 790 490" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<path d="M 730 490 L 730 752 L 790 752" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="680" y="470" class="interface">ImageVariantSet</text>
+<text x="704" y="315" class="small-copy">同一 default_variant</text>
+
+<!-- outputs to fusion -->
+<path d="M 1290 510 L 1340 510 L 1340 430 L 1400 430" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="1295" y="494" class="interface">TrackSet</text>
+<path d="M 1290 752 L 1340 752 L 1340 565 L 1400 565" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="1294" y="736" class="interface">SegmentationMap</text>
+<path d="M 1565 630 L 1565 680" fill="none" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+
+<!-- optional evidence -->
+<path d="M 1040 365 L 1040 420" fill="none" stroke="#9AA7B1" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrowOptional)"/>
+<text x="1052" y="397" class="small-copy">MatchResult（可选）</text>
+<path d="M 1290 292 L 1350 292 L 1350 350 L 1400 350" fill="none" stroke="#9AA7B1" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrowOptional)"/>
+<text x="1272" y="278" class="small-copy">几何状态（可选）</text>
+
+<!-- Alignment and provenance bus -->
+<rect x="410" y="880" width="1320" height="78" rx="14" fill="#183D5B"/>
+<text x="438" y="914" font-size="15" font-weight="700" fill="#FFFFFF">对齐与追溯总线</text>
+<text x="438" y="938" font-size="12" fill="#C9D9E4">所有跨模块结果必须携带：</text>
+<text x="650" y="938" font-size="13" font-weight="700" fill="#FFFFFF">sequence_id · frame_id · variant_id · coordinate_space · producer_ref · config_ref</text>
+<path d="M 540 745 L 540 880" fill="none" stroke="#9AA7B1" stroke-width="1.8" stroke-dasharray="6 5"/>
+<path d="M 1040 825 L 1040 880" fill="none" stroke="#9AA7B1" stroke-width="1.8" stroke-dasharray="6 5"/>
+<path d="M 1565 825 L 1565 880" fill="none" stroke="#9AA7B1" stroke-width="1.8" stroke-dasharray="6 5"/>
+<text x="74" y="910" font-size="13" fill="#6C7D89">对齐失败 / 输入缺失</text>
+<text x="74" y="935" font-size="13" fill="#6C7D89">只向下游显式降级</text>
+
+<!-- Evaluation cross-cutting layer -->
+<rect x="40" y="990" width="1720" height="58" rx="12" fill="#F1F4F6" stroke="#C8D2D9"/>
+<text x="66" y="1025" font-size="15" font-weight="700" fill="#526875">评测与验证贯穿层</text>
+<text x="270" y="1025" class="metric">M1 帧完整性</text>
+<text x="400" y="1025" class="metric">M2 质量/门控</text>
+<text x="548" y="1025" class="metric">M3 匹配可用率</text>
+<text x="702" y="1025" class="metric">M4 检测 + IDF1</text>
+<text x="866" y="1025" class="metric">M5 mIoU/对齐</text>
+<text x="1018" y="1025" class="metric">M6 关系准确率</text>
+<text x="1194" y="1025" class="metric">失败样本 + 配置追溯</text>
+
+<!-- Legend -->
+<line x1="1430" y1="1020" x2="1460" y2="1020" stroke="#687B8A" stroke-width="2.3" marker-end="url(#arrow)"/>
+<text x="1470" y="1025" class="metric">必需数据流</text>
+<line x1="1590" y1="1020" x2="1620" y2="1020" stroke="#9AA7B1" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrowOptional)"/>
+<text x="1630" y="1025" class="metric">可选证据</text>
+</svg>
