@@ -1,6 +1,6 @@
-# M5 语义分割（骨架）
+# M5 全图逐帧语义分割（骨架）
 module: M5
-name: 语义分割
+name: 全图逐帧语义分割
 
 impl:
   selected: pidnet_s               # Cityscapes 预训练
@@ -10,10 +10,14 @@ io:
   inputs: [ImageVariantSet]        # I3
   outputs: [SegmentationMap]       # I7
 
-# 待填（阶段五）：分割实现与规模、类别集合与映射表、边界与细长结构评价口径
+# 待填（阶段五）：分割实现与规模、类别模式、源帧对齐、边界与细长结构评价口径
 params:
+  scope: full_frame
+  frequency: every_frame
   class_schema: null               # 待填：类别模式引用（禁止按编号猜语义）
   input_resolution: null
+  output_alignment: source_frame   # 输出必须回到输入帧坐标，供 M4/M6 对齐
+  allow_temporal_smoothing: false  # 第一版不跨帧修补；启用时需显式记录窗口
   report_lane_f1: true             # 车道标线作为类别子集，需要时单独报告
   boundary_metric: null
 

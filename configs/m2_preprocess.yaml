@@ -1,21 +1,31 @@
-# M2 图像预处理与质量评价（骨架）
+# M2 输入规范化、图像预处理与质量评价（骨架）
 module: M2
-name: 图像预处理与质量评价
+name: 输入规范化、图像预处理与质量评价
 
 impl:
-  selected: zero_dce_tiny          # 低照度增强
-  baseline: clahe                  # 可解释基线
-  contrast: semantic_hsv_guided    # 对照实现
+  rectification: opencv_undistort  # 仅在标定有效且适用于当前图像时启用
+  enhancement:
+    selected: zero_dce_tiny         # 候选增强实现，不代表每帧必做
+    baseline: clahe                 # 可解释基线
+    contrast: semantic_hsv_guided   # 对照实现
 
 io:
   inputs: [CalibratedFrame]                        # I2
   outputs: [ImageVariantSet, QualityReport]        # I3
 
-# 待填（阶段三）：处理手段与强度、质量指标集合、门控阈值、对照方案
+# 待填（阶段三）：输入规范化规则、质量指标、校正/增强条件、门控阈值与对照方案
 params:
-  variants: [raw, enhanced]        # raw 版本必须始终存在
-  quality_metrics: []              # 待填：PSNR/SSIM/NIQE 等
-  gate: {}                         # 待填：门控规则与阈值
+  preserve_raw: true
+  normalize:
+    color_space: RGB               # 待填：输入格式统一规则
+    resize: null                   # 待填：尺寸策略；不得静默改变坐标语义
+  variants: [raw, rectified, enhanced]  # rectified/enhanced 按条件生成，raw 必须始终存在
+  quality_metrics: []              # 待填：亮度、曝光、模糊、噪声等质量指标
+  rectification:
+    enabled_when: calibration_valid
+  enhancement:
+    enabled_when: quality_gate
+  gate: {}                         # 待填：门控规则与阈值，选择一个 default_variant
   compare_downstream: true         # 验收以处理后下游指标是否劣化为准
 
 producer_ref: null

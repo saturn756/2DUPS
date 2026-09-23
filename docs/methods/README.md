@@ -5,12 +5,12 @@
 
 | 模块 | 选定方法 | 直接对照 | 方法文档 |
 |---|---|---|---|
-| M1 采集与相机标定 | OpenCV 张氏平面标定 + 畸变校正 | 自动标定（GNN 单应估计） | `m1_标定.md`（待补） |
+| M1 输入接入与标定状态管理 | OpenCV 张氏平面标定工具 + 标定状态绑定 | 自动标定（GNN 单应估计） | `m1_标定.md`（待补） |
 | M2 图像预处理与质量评价 | Zero-DCE Tiny（低照度）+ CLAHE（基线） | 语义 + HSV 引导增强 | `m2_增强.md`（待补） |
-| M3 几何特征提取与自运动估计 | SIFT + FLANN + RANSAC | XFeat | `m3_特征匹配.md`（待补） |
+| M3 帧间几何估计 | SIFT + FLANN + RANSAC | XFeat | `m3_特征匹配.md`（待补） |
 | M4 多目标检测与跟踪 | YOLOv12-N + ByteTrack（UCMCTrack 相机运动补偿） | YOLO26-n、OC-SORT | `m4_检测跟踪.md`（待补） |
 | M5 语义分割 | PIDNet-S（Cityscapes 预训练） | PP-MobileSeg、SCTNet | `m5_分割.md`（待补） |
-| M6 场景理解与拓扑推理 | 规则化 2D 场景图 | 端到端拓扑推理 | `m6_拓扑.md`（待补） |
+| M6 2D 场景结构融合 | 规则化 2D 场景图 | 端到端关系模型 | `m6_场景结构.md`（待补） |
 
 ## 每篇方法文档写什么
 

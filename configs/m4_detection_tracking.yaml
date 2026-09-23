@@ -16,17 +16,22 @@ io:
   inputs: [ImageVariantSet, MatchResult_optional]  # I3；I4 仅供跟踪子块
   outputs: [DetectionSet, TrackSet]                # I5（对外可读）/ I6
 
-# 待填（阶段四）：检测实现与规模、类别集合、关联代价设计、置信度阈值
+# 待填（阶段四）：检测范围与频率、类别集合、关联代价设计、生命周期与置信度阈值
 params:
   detection:
     classes: []                    # 待填：类别集合（引用类别模式）
+    scope: full_frame              # 第一版默认全图；ROI 只能作为经验证的优化策略
+    frequency: every_frame         # 第一版每帧检测；跳帧检测作为后续优化
     score_threshold: null
     nms: {}
   tracking:
+    association: bytetrack
     high_threshold: 0.6            # 高/低分框划分
     match_threshold: 0.2           # IoU 低于该值拒绝匹配
     max_lost_frames: 30            # 丢失超过该帧数才删除
-    use_geometry_compensation: true
+    motion_compensation: optional  # MatchResult 可用且可靠时启用
+    fallback: no_geometry_compensation
+    reset_on_sequence_change: true
     state_levels: [tracked, lost, new, unreliable]
 
 producer_ref: null

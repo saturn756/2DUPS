@@ -1,6 +1,6 @@
-# M3 几何特征提取与自运动估计（骨架）
+# M3 帧间几何估计（骨架）
 module: M3
-name: 几何特征提取与自运动估计
+name: 帧间几何估计
 
 impl:
   selected: sift_flann_ransac      # SIFT + FLANN + RANSAC
@@ -17,5 +17,7 @@ params:
   ransac: {}                       # 待填：阈值、置信度、最大迭代
   status_levels: [ok, unreliable, failed]
   min_inlier_ratio: null           # 待填
+  transform_semantics: image_plane_transform
+  use_metric_geometry: false
 
 producer_ref: null

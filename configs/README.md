@@ -8,12 +8,12 @@
 | 文件 | 归属 | 状态 |
 |---|---|---|
 | `common.yaml` | 全链路公共项：数据清单、日志、对齐键与版本策略 | 骨架 |
-| `m1_calibration.yaml` | M1 采集与相机标定 | 骨架 |
+| `m1_calibration.yaml` | M1 输入接入与标定状态管理 | 骨架 |
 | `m2_preprocess.yaml` | M2 图像预处理与质量评价 | 骨架 |
-| `m3_geometry.yaml` | M3 几何特征提取与自运动估计 | 骨架 |
+| `m3_geometry.yaml` | M3 帧间几何估计 | 骨架 |
 | `m4_detection_tracking.yaml` | M4 多目标检测与跟踪 | 骨架 |
 | `m5_segmentation.yaml` | M5 语义分割 | 骨架 |
-| `m6_topology.yaml` | M6 场景理解与拓扑推理 | 骨架 |
+| `m6_topology.yaml` | M6 2D 场景结构融合 | 骨架 |
 | `dataset_manifest.yaml` | 数据集清单（版本、切分、来源、许可、切片标签） | 待建 |
 
 ## 约定

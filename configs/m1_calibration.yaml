@@ -1,7 +1,7 @@
-# M1 采集与相机标定（骨架）
+# M1 输入接入与标定状态管理（骨架）
 # 职责见 docs/architecture/02_模块规范.md；接口见 docs/interface/04_接口规范.md
 module: M1
-name: 采集与相机标定
+name: 输入接入与标定状态管理
 
 impl:
   selected: opencv_zhang           # OpenCV 张氏平面标定 + cv2.undistort

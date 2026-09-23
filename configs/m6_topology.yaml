@@ -1,10 +1,10 @@
-# M6 场景理解与拓扑推理（骨架）
+# M6 2D 场景结构融合（骨架）
 module: M6
-name: 场景理解与拓扑推理
+name: 2D 场景结构融合
 
 impl:
   selected: rule_based_scene_graph   # 规则化 2D 场景图
-  contrast: []                       # 端到端拓扑推理作为能力上限参照
+  contrast: []                       # 端到端关系模型作为对照（不改变基础语义）
 
 io:
   inputs: [TrackSet, SegmentationMap, MatchResult_optional, calibration_status]
@@ -12,12 +12,18 @@ io:
 
 # 待填（阶段五）：关系类型集合与判定规则、证据类型与置信度口径、降级判定条件
 params:
+  alignment:
+    require_same_frame: true
+    require_same_variant: true
+    require_same_coordinate_space: true
   window:
-    length: null                   # 待填：帧窗口长度，须与评测切片口径一致
-    wait_timeout: null
-  node_types: [object, region, track]
-  relations: [membership, front_behind, left_right, adjacent, conflict]
-  geometry_status_levels: [full, degraded, image_plane]
+    length: 1
+    allow_future_frames: false
+  node_types: [track, region]
+  relations: [belongs_to, inside_region, left_of, right_of, overlaps, appears_in]
+  geometry_status_levels: [image_plane, degraded]
+  use_metric_geometry: false
   evidence_required: true          # 只输出证据充分的关系
+  reject_unaligned_inputs: true
 
-producer_ref: null
+producer_ref: m6.rule_based_scene_graph
