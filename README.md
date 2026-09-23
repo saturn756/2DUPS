@@ -14,6 +14,7 @@
 | [模块规范](docs/architecture/02_模块规范.md) | 每个模块的职责、边界、输入输出、约束与验收维度 |
 | [数据流与连接逻辑](docs/dataflow/03_数据流与连接逻辑.md) | 模块之间怎么连、缺了会怎样（图 1-2） |
 | [接口规范](docs/interface/04_接口规范.md) | 9 个接口的字段、不变量与降级语义 |
+| [数据集与格式调研](docs/datasets/06_数据集与格式调研.md) | 候选数据集、标定信息和原始格式，当前不下载 |
 | [实施规划](docs/architecture/05_实施规划.md) | 填充顺序、选型流程、评测体系与待填清单 |
 | [方法](docs/methods/README.md) | 各模块方法说明与候选对比 |
 | [图与资产](docs/figures/README.md) | 图 1-1、图 1-2（PNG + SVG） |
