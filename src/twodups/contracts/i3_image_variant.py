@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .base import Ref
+from .base import CalibrationStatus, Ref, Status
+from .i2_calibrated_frame import ImageSize
 
 
 @dataclass
@@ -12,6 +13,10 @@ class ImageVariant:
     kind: str                                  # raw / enhanced / ...
     media_ref: Ref
     params_ref: Ref | None = None
+    parent_variant_id: str | None = None
+    coordinate_space: str = "pixel"
+    transform_ref: Ref | None = None
+    operations: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -23,6 +28,14 @@ class ImageVariantSet:
     frame_id: str
     variants: list[ImageVariant]
     default_variant: str
+    sequence_id: str = ""
+    image_size: ImageSize | None = None
+    coordinate_space: str = "pixel"
+    calibration_status: CalibrationStatus = CalibrationStatus.MISSING
+    manifest_ref: str | None = None
+    schema_version: str = "1.0"
+    producer_ref: str = "m2.clahe_lab"
+    config_ref: str = "configs/m2_preprocess.yaml"
 
     def get(self, variant_id: str) -> ImageVariant:
         for v in self.variants:
@@ -41,3 +54,13 @@ class QualityReport:
     metrics: dict[str, float] = field(default_factory=dict)
     gate_decision: str = "use_raw"             # use_raw / use_processed
     reason: list[str] = field(default_factory=list)
+    sequence_id: str = ""
+    quality_flags: list[str] = field(default_factory=list)
+    operations: list[dict] = field(default_factory=list)
+    selected_variant_id: str = "raw"
+    manifest_ref: str | None = None
+    processing_ms: float = 0.0
+    status: Status = Status.OK
+    schema_version: str = "1.0"
+    producer_ref: str = "m2.quality_gate"
+    config_ref: str = "configs/m2_preprocess.yaml"

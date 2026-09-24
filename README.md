@@ -36,6 +36,8 @@ logs/               运行日志（不入库）
 outputs/            链路输出与评测记录（不入库）
 data/               数据 raw / interim / processed（不入库）
 requirements.txt    依赖
+requirements-dev.txt  开发与测试依赖（含项目可编辑安装）
+environment.yml     项目专用 Conda 环境规格
 pyproject.toml      包与工具配置
 ```
 
@@ -55,12 +57,27 @@ src/twodups/
 
 ## 开发
 
+在服务器 `zsf` 账号下使用项目专用环境，不借用其他项目的 `demo` 等环境：
+
 ```bash
-pip install -r requirements.txt
+cd /home/zsf/2DUPS
+/opt/anaconda3/bin/conda env create -f environment.yml -p /home/zsf/.conda/envs/2dups
+/home/zsf/.conda/envs/2dups/bin/python -m pip install -r requirements-dev.txt
+```
+
+环境已创建后，直接使用专用 Python 即可；若要在交互式 Shell 中激活，先执行
+`source /opt/anaconda3/etc/profile.d/conda.sh`，再执行
+`conda activate /home/zsf/.conda/envs/2dups`。
+
+```bash
+cd /home/zsf/2DUPS
+python -m pytest -q                                                  # 激活环境后运行
 
 python scripts/check_contracts.py                                   # 打印 9 个接口与字段
 python scripts/run_dataloader.py --sample-id 359ce11c-e2f58b33 --max-frames 30
 python scripts/run_dataloader.py                                    # 检查 5 段视频和 10 秒标签
+python scripts/run_m2.py --sample-id 359ce11c-e2f58b33 --max-frames 20
+python scripts/run_m2.py --max-frames 320 --stride 100             # 五段视频抽帧冒烟测试
 python scripts/run_pipeline.py --module-config configs/m5_segmentation.yaml --dry-run
 python scripts/evaluate.py --list-slices
 pytest                                                              # 契约与配置冒烟测试
@@ -68,8 +85,9 @@ pytest                                                              # 契约与�
 
 ## 状态
 
-阶段一（文献调研与系统架构设计）已完成。M1 的第一步 BDD100K DataLoader 已有独立入口；
-完整 M1 标定管理及 M2–M6 运行链路仍待接通。填充顺序见
+阶段一（文献调研与系统架构设计）已完成。M1 的第一步 BDD100K DataLoader、
+M2 的首版质量评价与简单增强已有独立入口；完整 M1 标定管理及 M3–M6 运行链路
+仍待接通。M2 尚未启用去畸变，阈值也未通过下游指标校准。填充顺序见
 [实施规划](docs/architecture/05_实施规划.md)。
 
 许可：Apache License 2.0，见 [LICENSE](LICENSE)。

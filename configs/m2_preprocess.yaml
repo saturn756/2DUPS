@@ -1,31 +1,39 @@
-# M2 输入规范化、图像预处理与质量评价（骨架）
+# M2 第一版：BDD100K RGB 帧质量评价与非几何增强；阈值尚需下游验证。
 module: M2
 name: 输入规范化、图像预处理与质量评价
+producer_ref: m2.clahe_lab
 
 impl:
-  rectification: opencv_undistort  # 仅在标定有效且适用于当前图像时启用
+  rectification: deferred           # 标定文件格式尚未接入，不能伪造 rectified
   enhancement:
-    selected: zero_dce_tiny         # 候选增强实现，不代表每帧必做
-    baseline: clahe                 # 可解释基线
-    contrast: semantic_hsv_guided   # 对照实现
+    selected: clahe_lab
 
 io:
   inputs: [CalibratedFrame]                        # I2
   outputs: [ImageVariantSet, QualityReport]        # I3
 
-# 待填（阶段三）：输入规范化规则、质量指标、校正/增强条件、门控阈值与对照方案
 params:
   preserve_raw: true
   normalize:
-    color_space: RGB               # 待填：输入格式统一规则
-    resize: null                   # 待填：尺寸策略；不得静默改变坐标语义
-  variants: [raw, rectified, enhanced]  # rectified/enhanced 按条件生成，raw 必须始终存在
-  quality_metrics: []              # 待填：亮度、曝光、模糊、噪声等质量指标
-  rectification:
-    enabled_when: calibration_valid
-  enhancement:
-    enabled_when: quality_gate
-  gate: {}                         # 待填：门控规则与阈值，选择一个 default_variant
-  compare_downstream: true         # 验收以处理后下游指标是否劣化为准
+    color_space: RGB
+    dtype: uint8
+    resize: null
+  output_dir: outputs/m2
+  exposure_pixels:
+    under_lt: 40
+    over_gt: 245
+  quality_gate:
+    low_light: {brightness_mean_lt: 60, underexposed_fraction_gt: 0.25}
+    severe_low_light: {brightness_mean_lt: 35, underexposed_fraction_gt: 0.45}
+    overexposed: {overexposed_fraction_gt: 0.03}
+    blur: {laplacian_variance_lt: 80}
+    noisy: {noise_sigma_gt: 8}
+  lowlight:
+    clahe: {clip_limit: 2.0, tile_grid_size: [8, 8]}
+    gamma: {enabled: true, normal: 0.90, severe: 0.80}
+  denoise:
+    diameter: 5
+    sigma_color: 20
+    sigma_space: 5
 
-producer_ref: null
+compare_downstream: true            # 阈值只供冒烟测试，不能宣称检测/跟踪改善

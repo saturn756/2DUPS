@@ -1,0 +1,7 @@
+# 2DUPS 专用 Conda 环境。Python 以外的依赖由 requirements-dev.txt 安装。
+name: 2dups
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip

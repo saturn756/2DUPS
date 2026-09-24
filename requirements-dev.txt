@@ -1,0 +1,4 @@
+# 从仓库根目录运行：python -m pip install -r requirements-dev.txt
+-r requirements.txt
+-e .
+pytest>=8,<10
