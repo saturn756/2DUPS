@@ -9,6 +9,7 @@ from .base import Ref
 @dataclass
 class Sample:
     sample_id: str
+    sequence_id: str
     media_ref: Ref
     timestamp: float | None = None
     annotation_ref: Ref | None = None
@@ -28,3 +29,6 @@ class DatasetManifest:
     samples: list[Sample] = field(default_factory=list)
     splits: dict[str, list[str]] = field(default_factory=dict)
     checksum: str | None = None
+    schema_version: str = "1.0"
+    producer_ref: str = "m1.dataset_manifest"
+    config_ref: str = "configs/dataset_manifest.yaml"

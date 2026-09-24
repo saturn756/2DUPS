@@ -9,6 +9,7 @@ PyYAML
 tqdm
 
 # ---- 数据与评测 ----
+av                         # M1: MOV/H.264 流式解码及旋转元数据
 pandas
 openpyxl
 pillow

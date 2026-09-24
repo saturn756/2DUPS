@@ -1,0 +1,41 @@
+# BDD100K 第一轮五段视频；媒体和标签路径相对于仓库根目录。
+manifest_id: bdd100k-five-video-smoke
+version: '2026-09-24'
+schema_version: '1.0'
+source: BDD100K
+license: BDD100K BAIR Open Research Commons educational and research use
+producer_ref: m1.dataset_manifest
+config_ref: configs/dataset_manifest.yaml
+splits:
+  train:
+    - 359ce11c-e2f58b33
+    - 9542db5e-c825c091
+    - 881a4fa1-30d35cf2
+    - 3311620c-6ce84fba
+    - 793b6756-ef820bf7
+samples:
+  - sample_id: 359ce11c-e2f58b33
+    sequence_id: 359ce11c-e2f58b33
+    media_ref: {uri: data/raw/bdd100k/bdd100k/videos/100k/train/359ce11c-e2f58b33.mov, kind: video}
+    annotation_ref: {uri: data/raw/bdd100k/100k/train/359ce11c-e2f58b33.json, kind: annotation}
+    slice_tags: [night, city_street, clear]
+  - sample_id: 9542db5e-c825c091
+    sequence_id: 9542db5e-c825c091
+    media_ref: {uri: data/raw/bdd100k/bdd100k/videos/100k/train/9542db5e-c825c091.mov, kind: video}
+    annotation_ref: {uri: data/raw/bdd100k/100k/train/9542db5e-c825c091.json, kind: annotation}
+    slice_tags: [night, residential, clear]
+  - sample_id: 881a4fa1-30d35cf2
+    sequence_id: 881a4fa1-30d35cf2
+    media_ref: {uri: data/raw/bdd100k/bdd100k/videos/100k/train/881a4fa1-30d35cf2.mov, kind: video}
+    annotation_ref: {uri: data/raw/bdd100k/100k/train/881a4fa1-30d35cf2.json, kind: annotation}
+    slice_tags: [daytime, highway, clear]
+  - sample_id: 3311620c-6ce84fba
+    sequence_id: 3311620c-6ce84fba
+    media_ref: {uri: data/raw/bdd100k/bdd100k/videos/100k/train/3311620c-6ce84fba.mov, kind: video}
+    annotation_ref: {uri: data/raw/bdd100k/100k/train/3311620c-6ce84fba.json, kind: annotation}
+    slice_tags: [daytime, highway, weather_unknown]
+  - sample_id: 793b6756-ef820bf7
+    sequence_id: 793b6756-ef820bf7
+    media_ref: {uri: data/raw/bdd100k/bdd100k/videos/100k/train/793b6756-ef820bf7.mov, kind: video}
+    annotation_ref: {uri: data/raw/bdd100k/100k/train/793b6756-ef820bf7.json, kind: annotation}
+    slice_tags: [night, city_street, clear]

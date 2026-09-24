@@ -6,7 +6,7 @@ from .base import (  # noqa: F401
     CalibrationState, CalibrationStatus, GeometryStatus, Producer, Ref, Status, TrackState,
 )
 from .i1_dataset_manifest import DatasetManifest, Sample  # noqa: F401
-from .i2_calibrated_frame import CalibratedFrame  # noqa: F401
+from .i2_calibrated_frame import CalibratedFrame, ImageSize  # noqa: F401
 from .i3_image_variant import ImageVariant, ImageVariantSet, QualityReport  # noqa: F401
 from .i4_match_result import FramePair, MatchResult, Transform  # noqa: F401
 from .i5_detection_set import Detection, DetectionSet  # noqa: F401

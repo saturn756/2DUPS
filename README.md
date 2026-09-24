@@ -47,7 +47,7 @@ src/twodups/
 ├── modules/      六个模块，每个含 module.py（入口）与 impl_*.py（选定 / 对照实现）
 ├── pipeline/     编排：registry（实现注册表）+ runner（按边串联）
 ├── evaluation/   数据切片、模块指标与 EvaluationRecord
-├── data/         数据清单（I1）读取与校验
+├── data/         数据清单（I1）读取、BDD100K 视频流式解码与 I2 元数据
 └── utils/        配置加载与日志
 ```
 
@@ -59,6 +59,8 @@ src/twodups/
 pip install -r requirements.txt
 
 python scripts/check_contracts.py                                   # 打印 9 个接口与字段
+python scripts/run_dataloader.py --sample-id 359ce11c-e2f58b33 --max-frames 30
+python scripts/run_dataloader.py                                    # 检查 5 段视频和 10 秒标签
 python scripts/run_pipeline.py --module-config configs/m5_segmentation.yaml --dry-run
 python scripts/evaluate.py --list-slices
 pytest                                                              # 契约与配置冒烟测试
@@ -66,7 +68,8 @@ pytest                                                              # 契约与�
 
 ## 状态
 
-阶段一（文献调研与系统架构设计）已完成；模块实现待开始，填充顺序见
+阶段一（文献调研与系统架构设计）已完成。M1 的第一步 BDD100K DataLoader 已有独立入口；
+完整 M1 标定管理及 M2–M6 运行链路仍待接通。填充顺序见
 [实施规划](docs/architecture/05_实施规划.md)。
 
 许可：Apache License 2.0，见 [LICENSE](LICENSE)。
