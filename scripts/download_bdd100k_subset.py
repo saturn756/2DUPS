@@ -11,14 +11,16 @@ import collections
 import os
 from pathlib import Path, PurePosixPath
 import shutil
+import time
+import urllib.error
 import urllib.request
 import zipfile
 
 
 VIDEO_URL = "http://128.32.162.150/bdd100k/bdd100k_videos.zip"
 LABEL_URL = "http://128.32.162.150/bdd100k/bdd100k_labels.zip"
-BLOCK_SIZE = 4 * 1024 * 1024
-MAX_BLOCKS = 4
+BLOCK_SIZE = 1024 * 1024
+MAX_BLOCKS = 16
 
 
 class HTTPRangeFile:
@@ -66,13 +68,20 @@ class HTTPRangeFile:
         request = urllib.request.Request(
             self.url, headers={"Range": f"bytes={start}-{end}"}
         )
-        with urllib.request.urlopen(request, timeout=120) as response:
-            expected_range = f"bytes {start}-{end}/{self.size}"
-            if response.status != 206 or response.headers.get("Content-Range") != expected_range:
-                raise RuntimeError(f"Server did not return requested range: {expected_range}")
-            data = response.read()
-        if len(data) != end - start + 1:
-            raise IOError(f"Short HTTP range at byte {start}")
+        expected_range = f"bytes {start}-{end}/{self.size}"
+        for attempt in range(5):
+            try:
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    if response.status != 206 or response.headers.get("Content-Range") != expected_range:
+                        raise RuntimeError(f"Server did not return requested range: {expected_range}")
+                    data = response.read()
+                if len(data) != end - start + 1:
+                    raise IOError(f"Short HTTP range at byte {start}")
+                break
+            except (OSError, urllib.error.URLError, TimeoutError):
+                if attempt == 4:
+                    raise
+                time.sleep(min(2 ** attempt, 8))
         self.cache[index] = data
         if len(self.cache) > MAX_BLOCKS:
             self.cache.popitem(last=False)

@@ -16,6 +16,7 @@
 | [接口规范](docs/interface/04_接口规范.md) | 9 个接口的字段、不变量与降级语义 |
 | [数据集与格式调研](docs/datasets/06_数据集与格式调研.md) | 候选数据集、标定信息和原始格式，当前不下载 |
 | [四类数据集格式清单](docs/datasets/07_四类数据集格式清单.md) | BDD100K、KITTI、Cityscapes、nuScenes 的具体格式示例 |
+| [BDD100K 五段小样本](docs/datasets/08_BDD100K_五段小样本.md) | 第一轮视频和标签选择、路径、下载方式与能力边界 |
 | [实施规划](docs/architecture/05_实施规划.md) | 填充顺序、选型流程、评测体系与待填清单 |
 | [方法](docs/methods/README.md) | 各模块方法说明与候选对比 |
 | [图与资产](docs/figures/README.md) | 图 1-1、图 1-2（PNG + SVG） |
