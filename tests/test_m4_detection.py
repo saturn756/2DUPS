@@ -71,6 +71,7 @@ def test_one_yolo11_detection_becomes_aligned_i5() -> None:
     assert result.objects[0].bbox.x2 == 20
     assert model.source[0, 0].tolist() == [30, 20, 10]
     assert model.options["classes"] == sorted(_config()["params"]["detection"]["class_map"])
+    assert model.options["device"] == 0
 
 
 def test_empty_detection_is_not_failure() -> None:

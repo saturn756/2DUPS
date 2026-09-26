@@ -1,6 +1,6 @@
-# 2DUPS 项目依赖
-# 骨架阶段只列确定要用的基础库；各模块实现选定后再逐项补充并锁定版本。
-# 约定：新增依赖请注明归属模块，例如 "# M4: ultralytics"
+# 2DUPS 项目依赖。Linux x86_64 / NVIDIA CUDA 12.8 基线；精确版本见 requirements-lock-linux-py311.txt。
+# PyTorch CUDA wheel 不在普通 PyPI 索引，须显式添加官方索引。
+--extra-index-url https://download.pytorch.org/whl/cu128
 
 # ---- 基础 ----
 numpy
@@ -16,14 +16,15 @@ pillow
 matplotlib
 
 # ---- M2 图像增强与去噪 ----
-# torch
-# torchvision
+# 当前 M2 只使用 OpenCV
 
 # ---- M3 特征检测与匹配 ----
 # （SIFT/FLANN 由 opencv-python 提供；XFeat 对照实现按官方仓库引入）
 
 # ---- M4 目标检测与跟踪 ----
-# YOLO11n 适配器延迟导入 ultralytics；权重接入并验证后再固定依赖版本与 Linux 锁文件。
+torch==2.8.0+cu128
+torchvision==0.23.0+cu128
+ultralytics==8.3.184     # YOLO11n 检测适配器；不包含模型权重
 
 # ---- M5 语义分割 ----
 # （PIDNet 以官方仓库为准，按需引入）

@@ -8,7 +8,7 @@
 
 ## 开始开发
 
-每位成员在**自己的 Linux 服务器**上分别 clone 仓库、创建项目专用环境并获取数据；不依赖其他成员的服务器、Conda 环境或文件目录。首次使用：
+每位成员在**自己的 Linux x86_64 服务器**上分别 clone 仓库、创建项目专用环境并获取数据；不依赖其他成员的服务器或文件目录。当前锁文件使用 PyTorch CUDA 12.8 构建，需要兼容的 NVIDIA 驱动（验证机器为 570.144）。首次使用：
 
 ```bash
 git clone https://github.com/saturn756/2DUPS.git
@@ -31,7 +31,7 @@ python scripts/run_m2.py --sample-id 359ce11c-e2f58b33 --max-frames 20
 
 完整检查可运行 `python scripts/run_dataloader.py`（5 段视频）和 `python scripts/run_m2.py --max-frames 320 --stride 100`（抽帧）。M2 PNG/报告写在被忽略的 `outputs/m2/`。`python scripts/run_pipeline.py --module-config configs/m2_preprocess.yaml --dry-run` **只解析配置**。
 
-M4 检测配置可用 `python scripts/run_m4_detection.py --dry-run` 检查；它不加载权重，也不下载任何东西。将来在 `configs/m4_detection_tracking.yaml` 填写本地 checkpoint 相对路径和 SHA-256，并给项目环境安装、锁定 Ultralytics 后，才可运行 `python scripts/run_m4_detection.py --sample-id 359ce11c-e2f58b33 --max-frames 1`。当前不能把检测适配器测试当作真实检测效果。
+M4 检测配置可用 `python scripts/run_m4_detection.py --dry-run` 检查；它不加载权重，也不下载任何东西。PyTorch、torchvision 和 Ultralytics 已纳入 Linux 锁文件，M4 默认使用首张 CUDA GPU；将来在 `configs/m4_detection_tracking.yaml` 填写本地 checkpoint 相对路径和 SHA-256 后，才可运行 `python scripts/run_m4_detection.py --sample-id 359ce11c-e2f58b33 --max-frames 1`。当前没有权重，不能把适配器测试当作真实检测效果。
 
 ## 只维护这几处约定
 

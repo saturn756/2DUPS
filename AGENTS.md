@@ -19,10 +19,10 @@ Collaborators use separate servers and checkouts. Never assume another member's 
 |---|---|---|
 | BDD100K input (I1/I2) | Working for 5-video subset only | `scripts/run_dataloader.py`; `src/twodups/data/` |
 | M2 quality and simple enhancement (I3) | Initial working version; thresholds uncalibrated | `scripts/run_m2.py`; `src/twodups/modules/m2_preprocess/` |
-| M4 YOLO11n detection (I5) | Adapter and mock tests only; no weight or real inference verified | `scripts/run_m4_detection.py --dry-run`; `src/twodups/modules/m4_detection_tracking/` |
+| M4 YOLO11n detection (I5) | CUDA runtime in Linux lock and verified on one server; adapter tests pass, but no weight or real inference verified | `scripts/run_m4_detection.py --dry-run`; `src/twodups/modules/m4_detection_tracking/` |
 | M1 general calibration; M3; M4 tracking; M5–M6; complete pipeline/evaluation | Planned / `NotImplementedError` | Do not report as working; implement one module at a time |
 
-The current in-process M1→M2 handoff is `LoadedFrame(I2 metadata + RGB ndarray)`; M2→M4 detection uses I3 plus the RGB array for `default_variant`. Arrays are runtime carriers, not serializable contracts. Between processes, serialize the contract and dereference media deliberately. Only the DataLoader and M2 scripts run real media today; M4 has no weight yet, and `run_pipeline.py --dry-run` only validates configuration loading.
+The current in-process M1→M2 handoff is `LoadedFrame(I2 metadata + RGB ndarray)`; M2→M4 detection uses I3 plus the RGB array for `default_variant`. Arrays are runtime carriers, not serializable contracts. Between processes, serialize the contract and dereference media deliberately. Only the DataLoader and M2 scripts run real media today; M4 has no weight yet, and `run_pipeline.py --dry-run` only validates configuration loading. The Linux lock includes CUDA 12.8 PyTorch and Ultralytics, not any YOLO checkpoint.
 
 ## Where to edit
 

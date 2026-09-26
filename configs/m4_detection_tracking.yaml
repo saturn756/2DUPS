@@ -20,7 +20,7 @@ params:
     frequency: every_frame         # 第一版每帧检测；跳帧检测作为后续优化
     checkpoint_path: null          # 本地相对路径，如 checkpoints/m4_detection_tracking/yolo11n/v1/best.pt
     checkpoint_sha256: null        # 配置权重时同时填写该文件的 SHA-256
-    device: cpu
+    device: 0                       # 默认使用首张 CUDA GPU；无 GPU 的机器需另行配置
     input_size: 640
     score_threshold: 0.25
     nms_iou: 0.70
