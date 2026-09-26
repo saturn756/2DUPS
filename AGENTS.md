@@ -11,6 +11,8 @@ This file is the operational instruction for work in this repository. Read it be
 
 `README.md` is the quick start. `docs/reference/` is historical investigation, **not** a current requirement. If sources disagree, do not pick one silently: fix code, its contract test and the relevant authoritative doc in the same change.
 
+Collaborators use separate servers and checkouts. Never assume another member's hostname, account, Conda prefix, dataset directory or checkpoint directory exists locally. All committed paths and CLI examples must be repository-relative. Share Git commits, exact configs and verified hashes; each server obtains its own ignored data and weights.
+
 ## Implementation status and safe entry points
 
 | Part | Status | Run command / implementation location |

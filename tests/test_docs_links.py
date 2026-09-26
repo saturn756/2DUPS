@@ -26,3 +26,15 @@ def test_canonical_relative_links_resolve() -> None:
             target_path = target.split("#", 1)[0]
             if target_path:
                 assert (path.parent / target_path).exists(), f"{name}: broken link {target}"
+
+
+def test_repository_guidance_has_no_machine_absolute_paths() -> None:
+    """Shared instructions must work from each collaborator's own checkout."""
+    paths = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "environment.yml"]
+    for dirname in ("docs", "configs", "scripts", "src", "tests"):
+        paths.extend((ROOT / dirname).rglob("*"))
+    machine_path = re.compile(r"/(?:home|Users|path/to|opt|mnt|tmp|var)/|~/|\b10\.10\.\d+\.\d+\b")
+    for path in paths:
+        if path == Path(__file__).resolve() or path.suffix not in {".md", ".py", ".yaml", ".yml"}:
+            continue
+        assert machine_path.search(path.read_text(encoding="utf-8")) is None, path

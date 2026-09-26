@@ -8,9 +8,11 @@
 
 ## 开始开发
 
-在仓库根目录、个人的 Linux 服务器账号下运行。不要复用别的项目环境；`zsf` 服务器已有独立环境 `/home/zsf/.conda/envs/2dups`。
+每位成员在**自己的 Linux 服务器**上分别 clone 仓库、创建项目专用环境并获取数据；不依赖其他成员的服务器、Conda 环境或文件目录。首次使用：
 
 ```bash
+git clone https://github.com/saturn756/2DUPS.git
+cd 2DUPS
 conda env create -f environment.yml
 conda activate 2dups
 python -m pip install -r requirements-lock-linux-py311.txt
