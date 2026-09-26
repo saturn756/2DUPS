@@ -19,9 +19,10 @@ Collaborators use separate servers and checkouts. Never assume another member's 
 |---|---|---|
 | BDD100K input (I1/I2) | Working for 5-video subset only | `scripts/run_dataloader.py`; `src/twodups/data/` |
 | M2 quality and simple enhancement (I3) | Initial working version; thresholds uncalibrated | `scripts/run_m2.py`; `src/twodups/modules/m2_preprocess/` |
-| M1 general calibration; M3–M6; complete pipeline/evaluation | Planned / `NotImplementedError` | Do not report as working; implement one module at a time |
+| M4 YOLO11n detection (I5) | Adapter and mock tests only; no weight or real inference verified | `scripts/run_m4_detection.py --dry-run`; `src/twodups/modules/m4_detection_tracking/` |
+| M1 general calibration; M3; M4 tracking; M5–M6; complete pipeline/evaluation | Planned / `NotImplementedError` | Do not report as working; implement one module at a time |
 
-The current in-process M1→M2 handoff is `LoadedFrame(I2 metadata + RGB ndarray)`. The array is a runtime carrier, not a serializable contract. Between processes, serialize the contract and dereference media deliberately. Only the DataLoader and M2 scripts run real media today; `run_pipeline.py --dry-run` only validates configuration loading.
+The current in-process M1→M2 handoff is `LoadedFrame(I2 metadata + RGB ndarray)`; M2→M4 detection uses I3 plus the RGB array for `default_variant`. Arrays are runtime carriers, not serializable contracts. Between processes, serialize the contract and dereference media deliberately. Only the DataLoader and M2 scripts run real media today; M4 has no weight yet, and `run_pipeline.py --dry-run` only validates configuration loading.
 
 ## Where to edit
 
@@ -49,7 +50,7 @@ git diff --check
 git status --short
 ```
 
-For data-dependent changes also run `sha256sum -c configs/datasets/bdd100k-five.sha256`, then the relevant `scripts/run_dataloader.py` or `scripts/run_m2.py` smoke command. Tests must not require private/raw data; data checks are separate. Before commit inspect `git diff --cached --name-only` for raw data, outputs, checkpoints, credentials or accidental generated files. The shared baseline is one Git commit (including configs), the verified dataset files and, when used, the verified checkpoint. Do not require per-run logs or result records for routine collaboration. Never claim M3–M6 or a full end-to-end run passed while those entries are still placeholders.
+For data-dependent changes also run `sha256sum -c configs/datasets/bdd100k-five.sha256`, then the relevant `scripts/run_dataloader.py` or `scripts/run_m2.py` smoke command. Tests must not require private/raw data; data checks are separate. Before commit inspect `git diff --cached --name-only` for raw data, outputs, checkpoints, credentials or accidental generated files. The shared baseline is one Git commit (including configs), the verified dataset files and, when used, the verified checkpoint. Do not require per-run logs or result records for routine collaboration. Never claim M4 real inference, M4 tracking, M3/M5/M6 or a full end-to-end run passed while those entries remain unverified or placeholders.
 
 ## Robustness rule
 

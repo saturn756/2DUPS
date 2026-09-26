@@ -43,7 +43,7 @@ def test_common_config_has_alignment_policy() -> None:
 
 def test_config_status_does_not_claim_unimplemented_modules_work() -> None:
     expected = {"m1_calibration": "partial", "m2_preprocess": "initial_implementation",
-                "m3_geometry": "planned", "m4_detection_tracking": "planned",
+                "m3_geometry": "planned", "m4_detection_tracking": "partial_detection",
                 "m5_segmentation": "planned", "m6_topology": "planned"}
     for name, status in expected.items():
         config = load_module(REPO_ROOT / "configs" / f"{name}.yaml")

@@ -1,28 +1,39 @@
-# M4 多目标检测与跟踪（骨架）
-# 检测子块与跟踪子块共用本模块边界，但指标必须分开统计
+# M4 检测适配器已接入 I5；无权重时只返回显式失败状态。跟踪仍未实现。
 module: M4
 name: 多目标检测与跟踪
-status: planned
+status: partial_detection
 
 impl:
   detection:
-    candidate: yolov12_n           # 尚未实现或取得权重
+    selected: yolo11n             # Ultralytics YOLO11n，COCO80 类别；不自动下载
   tracking:
-    candidate: bytetrack
+    candidate: bytetrack          # 尚未实现
     image_plane_compensation: optional   # 仅使用可靠 I4，不假设地平面/三维标定
 
 io:
-  inputs: [ImageVariantSet, MatchResult_optional]  # I3；I4 仅供跟踪子块
-  outputs: [DetectionSet, TrackSet]                # I5（对外可读）/ I6
+  inputs: [ImageVariantSet]       # I3 + 同进程 default_variant 的 RGB 像素
+  outputs: [DetectionSet]         # 目前仅 I5；I6 待跟踪子块实现
 
-# 待填（阶段四）：检测范围与频率、类别集合、关联代价设计、生命周期与置信度阈值
 params:
   detection:
-    classes: []                    # 待填：类别集合（引用类别模式）
     scope: full_frame              # 第一版默认全图；ROI 只能作为经验证的优化策略
     frequency: every_frame         # 第一版每帧检测；跳帧检测作为后续优化
-    score_threshold: null
-    nms: {}
+    checkpoint_path: null          # 本地相对路径，如 checkpoints/m4_detection_tracking/yolo11n/v1/best.pt
+    checkpoint_sha256: null        # 配置权重时同时填写该文件的 SHA-256
+    device: cpu
+    input_size: 640
+    score_threshold: 0.25
+    nms_iou: 0.70
+    max_detections: 300
+    class_map:                     # YOLO11n COCO80 ID -> 名称与 I5 class_ref；只检测这些类别
+      0: {name: person, ref: coco.person}
+      1: {name: bicycle, ref: coco.bicycle}
+      2: {name: car, ref: coco.car}
+      3: {name: motorcycle, ref: coco.motorcycle}
+      5: {name: bus, ref: coco.bus}
+      7: {name: truck, ref: coco.truck}
+      9: {name: traffic light, ref: coco.traffic_light}
+      11: {name: stop sign, ref: coco.stop_sign}
   tracking:
     association: bytetrack
     high_threshold: 0.6            # 高/低分框划分
@@ -33,4 +44,4 @@ params:
     reset_on_sequence_change: true
     state_levels: [tracked, lost, new, unreliable]
 
-producer_ref: null
+producer_ref: m4.yolo11_detector  # 仅对应当前 I5，不表示 I6 已实现

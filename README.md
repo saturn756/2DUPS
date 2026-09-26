@@ -4,7 +4,7 @@
 
 ![主架构图](docs/figures/图1-1_全新设计_2D感知系统架构.svg)
 
-当前只有 BDD100K 五段样本 DataLoader 与 M2 简单增强可以跑通。M1 通用标定、M3–M6、完整 `run_pipeline.py` 和正式评测仍未实现；不要把配置里的候选算法当成已有功能。
+当前 BDD100K 五段样本 DataLoader 与 M2 简单增强可以跑通；M4 已有 YOLO11n 检测适配器（I5），但**未配置权重、未验证真实模型推理**。M1 通用标定、M3、M4 跟踪、M5–M6、完整 `run_pipeline.py` 和正式评测仍未实现。
 
 ## 开始开发
 
@@ -30,6 +30,8 @@ python scripts/run_m2.py --sample-id 359ce11c-e2f58b33 --max-frames 20
 ```
 
 完整检查可运行 `python scripts/run_dataloader.py`（5 段视频）和 `python scripts/run_m2.py --max-frames 320 --stride 100`（抽帧）。M2 PNG/报告写在被忽略的 `outputs/m2/`。`python scripts/run_pipeline.py --module-config configs/m2_preprocess.yaml --dry-run` **只解析配置**。
+
+M4 检测配置可用 `python scripts/run_m4_detection.py --dry-run` 检查；它不加载权重，也不下载任何东西。将来在 `configs/m4_detection_tracking.yaml` 填写本地 checkpoint 相对路径和 SHA-256，并给项目环境安装、锁定 Ultralytics 后，才可运行 `python scripts/run_m4_detection.py --sample-id 359ce11c-e2f58b33 --max-frames 1`。当前不能把检测适配器测试当作真实检测效果。
 
 ## 只维护这几处约定
 
