@@ -17,6 +17,7 @@
 | [数据集与格式调研](docs/datasets/06_数据集与格式调研.md) | 候选数据集、标定信息和原始格式，当前不下载 |
 | [四类数据集格式清单](docs/datasets/07_四类数据集格式清单.md) | BDD100K、KITTI、Cityscapes、nuScenes 的具体格式示例 |
 | [BDD100K 五段小样本](docs/datasets/08_BDD100K_五段小样本.md) | 第一轮视频和标签选择、路径、下载方式与能力边界 |
+| [多服务器协作与复现规范](docs/team/01_协作开发与复现规范.md) | 环境锁、数据校验、checkpoint 目录、超参数与运行记录 |
 | [实施规划](docs/architecture/05_实施规划.md) | 填充顺序、选型流程、评测体系与待填清单 |
 | [方法](docs/methods/README.md) | 各模块方法说明与候选对比 |
 | [图与资产](docs/figures/README.md) | 图 1-1、图 1-2（PNG + SVG） |
@@ -37,6 +38,7 @@ outputs/            链路输出与评测记录（不入库）
 data/               数据 raw / interim / processed（不入库）
 requirements.txt    依赖
 requirements-dev.txt  开发与测试依赖（含项目可编辑安装）
+requirements-lock-linux-py311.txt  Linux 可比实验的已验证 Python 包版本
 environment.yml     项目专用 Conda 环境规格
 pyproject.toml      包与工具配置
 ```
@@ -62,12 +64,16 @@ src/twodups/
 ```bash
 cd /home/zsf/2DUPS
 /opt/anaconda3/bin/conda env create -f environment.yml -p /home/zsf/.conda/envs/2dups
-/home/zsf/.conda/envs/2dups/bin/python -m pip install -r requirements-dev.txt
+/home/zsf/.conda/envs/2dups/bin/python -m pip install -r requirements-lock-linux-py311.txt
+/home/zsf/.conda/envs/2dups/bin/python -m pip install --no-deps -e .
 ```
 
 环境已创建后，直接使用专用 Python 即可；若要在交互式 Shell 中激活，先执行
 `source /opt/anaconda3/etc/profile.d/conda.sh`，再执行
 `conda activate /home/zsf/.conda/envs/2dups`。
+其他服务器请按[协作与复现规范](docs/team/01_协作开发与复现规范.md)使用自己的
+Conda 安装目录和项目独立环境，并在下载数据后校验
+`configs/datasets/bdd100k-five.sha256`；不要复制本服务器的绝对路径。
 
 ```bash
 cd /home/zsf/2DUPS

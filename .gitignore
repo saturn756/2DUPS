@@ -21,5 +21,7 @@ data/interim/*
 !data/interim/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+# 本地模型权重；只提交获取说明、元数据模板与校验和，不提交权重本体
+/checkpoints/
 runs/
 *.log

@@ -9,6 +9,7 @@
 | `interface/` | 9 个接口的字段、不变量与降级语义 | [04 接口规范](interface/04_接口规范.md) |
 | `datasets/` | 候选数据集、标定信息与原始格式调研 | [06 数据集与格式调研](datasets/06_数据集与格式调研.md) |
 | `datasets/` | 四类候选数据集的目录、标签和标定字段清单 | [07 四类数据集格式清单](datasets/07_四类数据集格式清单.md) |
+| `team/` | 多服务器环境、数据、checkpoint 与参数复现约定 | [协作开发与复现规范](team/01_协作开发与复现规范.md) |
 | `methods/` | 各模块方法说明与候选对比 | [方法索引](methods/README.md) |
 | `figures/` | 图 1-1、图 1-2（PNG + SVG） | [图与资产](figures/README.md) |
 

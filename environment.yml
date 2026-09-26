@@ -3,5 +3,5 @@ name: 2dups
 channels:
   - defaults
 dependencies:
-  - python=3.11
+  - python=3.11.16
   - pip
