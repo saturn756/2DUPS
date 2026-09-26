@@ -38,7 +38,7 @@ python scripts/run_m2.py --sample-id 359ce11c-e2f58b33 --max-frames 20
 | Agent/协作者应读什么、改什么、怎么验证 | [AGENTS.md](AGENTS.md) |
 | 系统范围、六个模块、数据流和降级 | [模块规范](docs/architecture/02_模块规范.md) |
 | I1–I9 字段、JSON 示例和不变量 | [接口规范](docs/interface/04_接口规范.md) + `src/twodups/contracts/` |
-| 环境、数据、checkpoint、参数和运行记录 | [协作与复现规范](docs/team/01_协作开发与复现规范.md) |
+| 环境、数据、checkpoint 和共享参数 | [协作与复现规范](docs/team/01_协作开发与复现规范.md) |
 | 现用数据集文件与下载方法 | [BDD100K 五段样本](docs/datasets/08_BDD100K_五段小样本.md) |
 | 当前模块参数 | `configs/`；不要从历史调研或图示反推参数 |
 

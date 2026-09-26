@@ -6,7 +6,7 @@ This file is the operational instruction for work in this repository. Read it be
 
 1. `docs/architecture/02_模块规范.md`: project scope, M1–M6 responsibilities, dataflow and degradation.
 2. `docs/interface/04_接口规范.md` together with `src/twodups/contracts/`: I1–I9 wire fields. Code and examples must agree; `to_wire()` emits JSON payloads.
-3. `docs/team/01_协作开发与复现规范.md`: environment, dataset, checkpoints, run records and PR handoff.
+3. `docs/team/01_协作开发与复现规范.md`: environment, dataset, checkpoints and the minimal collaboration checks.
 4. `configs/*.yaml` and `configs/dataset_manifest.yaml`: current values and sample identity. `docs/datasets/08_BDD100K_五段小样本.md` gives the exact acquisition commands.
 
 `README.md` is the quick start. `docs/reference/` is historical investigation, **not** a current requirement. If sources disagree, do not pick one silently: fix code, its contract test and the relevant authoritative doc in the same change.
@@ -31,7 +31,7 @@ The current in-process M1→M2 handoff is `LoadedFrame(I2 metadata + RGB ndarray
 | A module algorithm or threshold | `src/twodups/modules/<module>/`, `configs/m<id>_*.yaml`, focused tests; update architecture only if responsibilities change |
 | Dataset selection or paths | `configs/dataset_manifest.yaml`, `configs/datasets/*.sha256`, acquisition documentation and reproducibility test |
 | Dependency | `requirements.txt`, platform lock file, `environment.yml` when Python changes; test in isolated `2dups` environment |
-| Checkpoint/model | `configs/` relative checkpoint path, documented source/license/class schema/input spec/SHA-256; never Git-add weights |
+| Checkpoint/model | When used, commit its repository-relative path and expected SHA-256 in the module config; never Git-add weights |
 | Working entry point | `scripts/`, `README.md`, run smoke test |
 
 Do not modify the historical research or diagrams to encode new operational rules. Do not add a new README per module; the three authoritative docs and config/code comments are the maintainable documentation set.
@@ -49,7 +49,7 @@ git diff --check
 git status --short
 ```
 
-For data-dependent changes also run `sha256sum -c configs/datasets/bdd100k-five.sha256`, then the relevant `scripts/run_dataloader.py` or `scripts/run_m2.py` smoke command. Tests must not require private/raw data; data checks are separate. Before commit inspect `git diff --cached --name-only` for raw data, outputs, checkpoints, credentials or accidental generated files. Record the Git commit, exact config, dataset manifest/hash, environment lock, model checkpoint hash (if any), command and observed result. Never claim M3–M6 or a full end-to-end run passed while those entries are still placeholders.
+For data-dependent changes also run `sha256sum -c configs/datasets/bdd100k-five.sha256`, then the relevant `scripts/run_dataloader.py` or `scripts/run_m2.py` smoke command. Tests must not require private/raw data; data checks are separate. Before commit inspect `git diff --cached --name-only` for raw data, outputs, checkpoints, credentials or accidental generated files. The shared baseline is one Git commit (including configs), the verified dataset files and, when used, the verified checkpoint. Do not require per-run logs or result records for routine collaboration. Never claim M3–M6 or a full end-to-end run passed while those entries are still placeholders.
 
 ## Robustness rule
 
