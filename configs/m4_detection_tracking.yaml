@@ -2,15 +2,14 @@
 # 检测子块与跟踪子块共用本模块边界，但指标必须分开统计
 module: M4
 name: 多目标检测与跟踪
+status: planned
 
 impl:
   detection:
-    selected: yolov12_n            # 同族尺度 N/S/M/L/X 对照后选定 N
-    contrast: [yolo26_n]
+    candidate: yolov12_n           # 尚未实现或取得权重
   tracking:
-    selected: bytetrack            # 低分框二次关联
-    upgrade: ucmctrack             # 相机运动补偿
-    contrast: [oc_sort]
+    candidate: bytetrack
+    image_plane_compensation: optional   # 仅使用可靠 I4，不假设地平面/三维标定
 
 io:
   inputs: [ImageVariantSet, MatchResult_optional]  # I3；I4 仅供跟踪子块

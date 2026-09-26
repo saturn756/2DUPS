@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 import unittest
 
-from twodups.data.manifest import load
+from twodups.data.manifest import load, validate
 from twodups.utils.config import REPO_ROOT
 
 
@@ -24,6 +24,12 @@ class TestBDD100KAssetList(unittest.TestCase):
         paths = [entry.group(2) for entry in entries if entry is not None]
         self.assertEqual(len(paths), len(set(paths)), "Duplicate checksum paths")
         self.assertEqual(set(paths), expected)
+
+    def test_split_leakage_is_rejected(self) -> None:
+        manifest = load(REPO_ROOT / "configs/dataset_manifest.yaml")
+        sample_id = manifest.splits["train"][0]
+        manifest.splits["test"] = [sample_id]
+        self.assertTrue(any("both train and test" in issue for issue in validate(manifest)))
 
 
 if __name__ == "__main__":

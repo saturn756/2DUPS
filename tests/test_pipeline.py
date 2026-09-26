@@ -39,3 +39,14 @@ def test_common_config_has_alignment_policy() -> None:
     cfg = load_module(REPO_ROOT / "configs" / "m1_calibration.yaml")
     assert cfg["alignment"]["variant_policy"] == "same_for_all_branches"
     assert cfg["alignment"]["allow_future_frames"] is False
+
+
+def test_config_status_does_not_claim_unimplemented_modules_work() -> None:
+    expected = {"m1_calibration": "partial", "m2_preprocess": "initial_implementation",
+                "m3_geometry": "planned", "m4_detection_tracking": "planned",
+                "m5_segmentation": "planned", "m6_topology": "planned"}
+    for name, status in expected.items():
+        config = load_module(REPO_ROOT / "configs" / f"{name}.yaml")
+        assert config["status"] == status
+        if status == "planned":
+            assert config["producer_ref"] is None

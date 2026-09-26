@@ -1,4 +1,4 @@
-"""I2 CalibratedFrame（边 E02 必需、E11 可选）。"""
+"""I2 CalibratedFrame: source-frame metadata and calibration state."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -10,6 +10,10 @@ from .base import CalibrationState, Ref
 class ImageSize:
     width: int
     height: int
+
+    def __post_init__(self) -> None:
+        if self.width <= 0 or self.height <= 0:
+            raise ValueError("Image dimensions must be positive")
 
 
 @dataclass

@@ -1,10 +1,10 @@
 # M3 帧间几何估计（骨架）
 module: M3
 name: 帧间几何估计
+status: planned
 
 impl:
-  selected: sift_flann_ransac      # SIFT + FLANN + RANSAC
-  contrast: xfeat                  # 轻量学习型对照
+  candidate: sift_flann_ransac     # 尚未实现，不是可运行选定方法
 
 io:
   inputs: [ImageVariantSet]        # 图像对（相邻两帧，同一 variant_id）
@@ -14,10 +14,10 @@ io:
 params:
   pair: adjacent                   # pair(t-1, t)，结果只用于 t 帧及之后
   ratio_test: 0.8
-  ransac: {}                       # 待填：阈值、置信度、最大迭代
+  ransac: {}                       # 尚未设定
   status_levels: [ok, unreliable, failed]
   min_inlier_ratio: null           # 待填
   transform_semantics: image_plane_transform
   use_metric_geometry: false
 
-producer_ref: null
+producer_ref: null                 # 实现后填写

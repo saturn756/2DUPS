@@ -29,7 +29,12 @@ def main() -> int:
 
     manifest = load(args.manifest)
     loader = BDD100KVideoLoader(manifest, root=args.root)
-    m2 = M2Preprocess(load_module(args.config))
+    config_path = args.config.resolve()
+    try:
+        config_ref = config_path.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        parser.error("--config must be inside the repository for reproducible config_ref")
+    m2 = M2Preprocess(load_module(config_path), config_ref=config_ref)
     sample_ids = [args.sample_id] if args.sample_id else manifest.splits[args.split]
     for sample_id in sample_ids:
         processed_count = 0

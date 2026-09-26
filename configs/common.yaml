@@ -1,15 +1,12 @@
-# 全链路公共配置（骨架）
-# 与各模块配置（m1_*.yaml … m6_*.yaml）组合使用；键名先固定，取值待实施方案确定。
+# 全链路共享配置；仅数据清单和对齐政策，模块参数在各模块配置中。
 
 project: 2DUPS
-stage: 1                      # 当前处于阶段一（架构设计）
 interface_version: "1.0"      # 对应 docs/interface/04_接口规范.md
 
 # 数据清单：版本、切分、来源与许可、切片标签（DatasetManifest / I1）
 dataset:
-  manifest: configs/dataset_manifest.yaml    # 待建
-  name: BDD100K                               # 主数据集
-  supplements: [Cityscapes, KITTI]            # 分割类别体系 / 相机参数
+  manifest: configs/dataset_manifest.yaml
+  name: BDD100K
 
 # 对齐与版本策略
 alignment:

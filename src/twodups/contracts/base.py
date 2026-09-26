@@ -1,12 +1,9 @@
-"""接口通用约定：强制随行字段、状态枚举与大对象引用。
-
-每个接口都必须能回答四件事：哪一帧（frame_id）、哪个图像版本（variant_id）、
-哪个实现与配置（producer_ref / config_ref）、哪个标定状态（calibration / geometry_status）。
-"""
+"""Shared wire-level states and references. See docs/interface/04_接口规范.md."""
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import math
 
 
 class Status(str, Enum):
@@ -24,7 +21,6 @@ class CalibrationStatus(str, Enum):
 
 
 class GeometryStatus(str, Enum):
-    FULL = "full"
     DEGRADED = "degraded"
     IMAGE_PLANE = "image_plane"
 
@@ -60,3 +56,16 @@ class CalibrationState:
     status: CalibrationStatus
     params_ref: Ref | None = None
     reason: str | None = None
+
+
+@dataclass(frozen=True)
+class BBox:
+    x1: float
+    y1: float
+    x2: float
+    y2: float
+
+    def __post_init__(self) -> None:
+        if (not all(math.isfinite(value) for value in (self.x1, self.y1, self.x2, self.y2))
+                or self.x2 <= self.x1 or self.y2 <= self.y1):
+            raise ValueError("Invalid bbox coordinates")

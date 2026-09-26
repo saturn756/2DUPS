@@ -21,5 +21,5 @@ class M3Geometry:
 
     def run(self, *inputs: Any, ctx: ModuleContext) -> ModuleRun:
         raise NotImplementedError(
-            "M3 待阶段四实现：见 docs/architecture/05_实施规划.md（S3）"
+            "M3 尚未实现；见 docs/architecture/02_模块规范.md"
         )

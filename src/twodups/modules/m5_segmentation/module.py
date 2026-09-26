@@ -21,5 +21,5 @@ class M5Segmentation:
 
     def run(self, *inputs: Any, ctx: ModuleContext) -> ModuleRun:
         raise NotImplementedError(
-            "M5 待阶段五实现：见 docs/architecture/05_实施规划.md（S5）"
+            "M5 尚未实现；见 docs/architecture/02_模块规范.md"
         )

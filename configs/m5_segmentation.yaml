@@ -1,10 +1,10 @@
 # M5 全图逐帧语义分割（骨架）
 module: M5
 name: 全图逐帧语义分割
+status: planned
 
 impl:
-  selected: pidnet_s               # Cityscapes 预训练
-  contrast: [pp_mobileseg, sctnet]
+  candidate: pidnet_s              # 尚未实现或取得权重
 
 io:
   inputs: [ImageVariantSet]        # I3

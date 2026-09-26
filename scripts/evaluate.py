@@ -22,7 +22,7 @@ def main() -> int:
         for s in DEFAULT_SLICES:
             print(s)
         return 0
-    print("评测尚未接通：见 docs/architecture/05_实施规划.md（S6）")
+    print("评测尚未接通：见 docs/architecture/02_模块规范.md")
     return 0
 
 

@@ -27,7 +27,7 @@ def main() -> int:
     for cls, iface in CASES:
         names = ", ".join(f.name for f in fields(cls))
         print(f"[{iface}] {cls.__name__}\n    {names}")
-    print("\n强制随行字段：frame_id / variant_id / producer_ref(config_ref) / calibration(geometry_status)")
+    print("\n运行级与帧级字段不同；必需字段和例子见 docs/interface/04_接口规范.md")
     return 0
 
 

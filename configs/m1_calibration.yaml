@@ -1,21 +1,17 @@
-# M1 输入接入与标定状态管理（骨架）
-# 职责见 docs/architecture/02_模块规范.md；接口见 docs/interface/04_接口规范.md
+# M1 通用模块尚未接通；BDD100K DataLoader 独立入口见 scripts/run_dataloader.py。
 module: M1
 name: 输入接入与标定状态管理
+status: partial
 
 impl:
-  selected: opencv_zhang           # OpenCV 张氏平面标定 + cv2.undistort
-  baseline: auto_calib_gnn         # 对照实现（可选）
+  loader: bdd100k_video_loader
+  calibration: deferred            # 无已验证内参；不得输出 rectified
 
 io:
   inputs: [image_sequence, camera_params_optional, dataset_manifest]
   outputs: [CalibratedFrame, DatasetManifest]     # I2 / I1
 
-# 待填（阶段二）：标定方式与参数、数据来源与切分方案
 params:
-  pattern: {}                      # 棋盘格尺寸、方格边长
-  distortion_model: k1_k2          # 仅建模前两项径向畸变
   calibration_status: [valid, missing, stale]
-  reprojection_error_threshold: null   # 待填
 
-producer_ref: null                 # 实现与配置标识，评测可复现所需
+producer_ref: m1.bdd100k_video_loader

@@ -1,10 +1,10 @@
 # M6 2D 场景结构融合（骨架）
 module: M6
 name: 2D 场景结构融合
+status: planned
 
 impl:
-  selected: rule_based_scene_graph   # 规则化 2D 场景图
-  contrast: []                       # 端到端关系模型作为对照（不改变基础语义）
+  candidate: rule_based_scene_graph
 
 io:
   inputs: [TrackSet, SegmentationMap, MatchResult_optional, calibration_status]
@@ -26,4 +26,4 @@ params:
   evidence_required: true          # 只输出证据充分的关系
   reject_unaligned_inputs: true
 
-producer_ref: m6.rule_based_scene_graph
+producer_ref: null                 # 实现后填写

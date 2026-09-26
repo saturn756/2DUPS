@@ -1,4 +1,4 @@
-# 2DUPS 专用 Conda 环境。Python 以外的依赖由 requirements-dev.txt 安装。
+# 2DUPS 专用 Conda 环境。可复现基线的 Python 包由 requirements-lock-linux-py311.txt 安装；开放式开发可用 requirements-dev.txt。
 name: 2dups
 channels:
   - defaults

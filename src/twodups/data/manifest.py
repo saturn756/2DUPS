@@ -93,7 +93,15 @@ def validate(manifest: DatasetManifest) -> list[str]:
     if not isinstance(manifest.splits, dict) or not manifest.splits:
         problems.append("missing splits")
     else:
+        assigned: dict[str, str] = {}
         for split, members in manifest.splits.items():
             if not isinstance(members, list) or any(member not in sample_ids for member in members):
                 problems.append(f"split {split} references unknown samples")
+                continue
+            if len(members) != len(set(members)):
+                problems.append(f"split {split} contains duplicate samples")
+            for member in members:
+                if member in assigned and assigned[member] != split:
+                    problems.append(f"sample {member} occurs in both {assigned[member]} and {split}")
+                assigned[member] = split
     return problems

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import json
 import unittest
 from unittest.mock import patch
 
@@ -107,6 +108,18 @@ class TestM2(unittest.TestCase):
         result = self.m2.run(_frame(image), ctx=ctx)
         self.assertEqual(set(result.outputs), {"ImageVariantSet", "QualityReport"})
         self.assertEqual(result.outputs["ImageVariantSet"].producer_ref, "m2.clahe_lab")
+
+    def test_experiment_config_ref_is_preserved(self) -> None:
+        config = load_module(REPO_ROOT / "configs/m2_preprocess.yaml")
+        config["params"]["output_dir"] = self.tmp.name
+        m2 = M2Preprocess(config, config_ref="configs/experiments/m2/lowlight-a.yaml")
+        result = m2.process(_frame(np.full((64, 96, 3), 150, dtype=np.uint8)))
+        self.assertEqual(result.variants.config_ref, "configs/experiments/m2/lowlight-a.yaml")
+        self.assertEqual(result.quality.config_ref, result.variants.config_ref)
+        stored = json.loads(result.report_path.read_text(encoding="utf-8"))
+        self.assertEqual(stored["interface"], "I3")
+        self.assertEqual(stored["kind"], "QualityReport")
+        self.assertEqual(stored["config_ref"], result.quality.config_ref)
 
     def test_unsupported_rectification_config_is_rejected(self) -> None:
         config = load_module(REPO_ROOT / "configs/m2_preprocess.yaml")

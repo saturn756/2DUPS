@@ -1,99 +1,45 @@
-# 2DUPS · 单模态 2D 感知系统
+# 2DUPS · 单目 RGB 道路视频的 2D 感知原型
 
-在公开道路 RGB 图像 / 视频上离线复现单模态 2D 感知流程的课程项目仓库。
+项目目标：离线接入视频，评价/预处理图像，逐步实现帧间几何、检测跟踪、语义分割与可审计的 **2D** 场景关系。不是自动驾驶控制或 3D 风险系统。
 
-![图 1-1 全新设计的 2D 感知系统架构](docs/figures/图1-1_全新设计_2D感知系统架构.svg)
+![主架构图](docs/figures/图1-1_全新设计_2D感知系统架构.svg)
 
-数据流：`输入 → M1 输入接入与标定状态管理 → M2 输入规范化与质量评价 →｛M3 帧间几何 ∥ M4 检测跟踪 ∥ M5 语义分割｝→ M6 2D 场景结构融合 → SceneGraph2D`
+当前只有 BDD100K 五段样本 DataLoader 与 M2 简单增强可以跑通。M1 通用标定、M3–M6、完整 `run_pipeline.py` 和正式评测仍未实现；不要把配置里的候选算法当成已有功能。
 
-## 文档
+## 开始开发
 
-| 文档 | 内容 |
-|---|---|
-| [系统架构](docs/architecture/01_系统架构.md) | 目标与范围、架构风格、六个模块的职责 |
-| [模块规范](docs/architecture/02_模块规范.md) | 每个模块的职责、边界、输入输出、约束与验收维度 |
-| [数据流与连接逻辑](docs/dataflow/03_数据流与连接逻辑.md) | 模块之间怎么连、缺了会怎样（图 1-2） |
-| [接口规范](docs/interface/04_接口规范.md) | 9 个接口的字段、不变量与降级语义 |
-| [数据集与格式调研](docs/datasets/06_数据集与格式调研.md) | 候选数据集、标定信息和原始格式，当前不下载 |
-| [四类数据集格式清单](docs/datasets/07_四类数据集格式清单.md) | BDD100K、KITTI、Cityscapes、nuScenes 的具体格式示例 |
-| [BDD100K 五段小样本](docs/datasets/08_BDD100K_五段小样本.md) | 第一轮视频和标签选择、路径、下载方式与能力边界 |
-| [多服务器协作与复现规范](docs/team/01_协作开发与复现规范.md) | 环境锁、数据校验、checkpoint 目录、超参数与运行记录 |
-| [实施规划](docs/architecture/05_实施规划.md) | 填充顺序、选型流程、评测体系与待填清单 |
-| [方法](docs/methods/README.md) | 各模块方法说明与候选对比 |
-| [图与资产](docs/figures/README.md) | 图 1-1、图 1-2（PNG + SVG） |
-
-文档总索引见 [docs/README.md](docs/README.md)。
-
-## 目录
-
-```
-configs/            各模块配置（一模块一份 + common.yaml）
-docs/               架构、数据流、接口、方法、图
-src/twodups/        代码包
-scripts/            命令行入口
-tests/              测试
-notebooks/          实验与可视化
-logs/               运行日志（不入库）
-outputs/            链路输出与评测记录（不入库）
-data/               数据 raw / interim / processed（不入库）
-requirements.txt    依赖
-requirements-dev.txt  开发与测试依赖（含项目可编辑安装）
-requirements-lock-linux-py311.txt  Linux 可比实验的已验证 Python 包版本
-environment.yml     项目专用 Conda 环境规格
-pyproject.toml      包与工具配置
-```
-
-## 代码结构
-
-```
-src/twodups/
-├── contracts/    接口契约 I1–I9：字段、状态枚举与大对象引用
-├── modules/      六个模块，每个含 module.py（入口）与 impl_*.py（选定 / 对照实现）
-├── pipeline/     编排：registry（实现注册表）+ runner（按边串联）
-├── evaluation/   数据切片、模块指标与 EvaluationRecord
-├── data/         数据清单（I1）读取、BDD100K 视频流式解码与 I2 元数据
-└── utils/        配置加载与日志
-```
-
-约定：模块之间只通过 `contracts` 中的接口通信；换实现不改接口，靠配置里的 `impl` 切换。
-
-## 开发
-
-在服务器 `zsf` 账号下使用项目专用环境，不借用其他项目的 `demo` 等环境：
+在仓库根目录、个人的 Linux 服务器账号下运行。不要复用别的项目环境；`zsf` 服务器已有独立环境 `/home/zsf/.conda/envs/2dups`。
 
 ```bash
-cd /home/zsf/2DUPS
-/opt/anaconda3/bin/conda env create -f environment.yml -p /home/zsf/.conda/envs/2dups
-/home/zsf/.conda/envs/2dups/bin/python -m pip install -r requirements-lock-linux-py311.txt
-/home/zsf/.conda/envs/2dups/bin/python -m pip install --no-deps -e .
+conda env create -f environment.yml
+conda activate 2dups
+python -m pip install -r requirements-lock-linux-py311.txt
+python -m pip install --no-deps -e .
+python -m pip check
+python -m pytest -q
 ```
 
-环境已创建后，直接使用专用 Python 即可；若要在交互式 Shell 中激活，先执行
-`source /opt/anaconda3/etc/profile.d/conda.sh`，再执行
-`conda activate /home/zsf/.conda/envs/2dups`。
-其他服务器请按[协作与复现规范](docs/team/01_协作开发与复现规范.md)使用自己的
-Conda 安装目录和项目独立环境，并在下载数据后校验
-`configs/datasets/bdd100k-five.sha256`；不要复制本服务器的绝对路径。
+获取 5 段 BDD100K 视频和 JSON 的确切命令见[样本说明](docs/datasets/08_BDD100K_五段小样本.md)。数据放在 `data/raw/bdd100k/`，不进入 Git；取得后先验证：
 
 ```bash
-cd /home/zsf/2DUPS
-python -m pytest -q                                                  # 激活环境后运行
-
-python scripts/check_contracts.py                                   # 打印 9 个接口与字段
+sha256sum -c configs/datasets/bdd100k-five.sha256
 python scripts/run_dataloader.py --sample-id 359ce11c-e2f58b33 --max-frames 30
-python scripts/run_dataloader.py                                    # 检查 5 段视频和 10 秒标签
 python scripts/run_m2.py --sample-id 359ce11c-e2f58b33 --max-frames 20
-python scripts/run_m2.py --max-frames 320 --stride 100             # 五段视频抽帧冒烟测试
-python scripts/run_pipeline.py --module-config configs/m5_segmentation.yaml --dry-run
-python scripts/evaluate.py --list-slices
-pytest                                                              # 契约与配置冒烟测试
 ```
 
-## 状态
+完整检查可运行 `python scripts/run_dataloader.py`（5 段视频）和 `python scripts/run_m2.py --max-frames 320 --stride 100`（抽帧）。M2 PNG/报告写在被忽略的 `outputs/m2/`。`python scripts/run_pipeline.py --module-config configs/m2_preprocess.yaml --dry-run` **只解析配置**。
 
-阶段一（文献调研与系统架构设计）已完成。M1 的第一步 BDD100K DataLoader、
-M2 的首版质量评价与简单增强已有独立入口；完整 M1 标定管理及 M3–M6 运行链路
-仍待接通。M2 尚未启用去畸变，阈值也未通过下游指标校准。填充顺序见
-[实施规划](docs/architecture/05_实施规划.md)。
+## 只维护这几处约定
 
-许可：Apache License 2.0，见 [LICENSE](LICENSE)。
+| 目的 | 权威位置 |
+|---|---|
+| Agent/协作者应读什么、改什么、怎么验证 | [AGENTS.md](AGENTS.md) |
+| 系统范围、六个模块、数据流和降级 | [模块规范](docs/architecture/02_模块规范.md) |
+| I1–I9 字段、JSON 示例和不变量 | [接口规范](docs/interface/04_接口规范.md) + `src/twodups/contracts/` |
+| 环境、数据、checkpoint、参数和运行记录 | [协作与复现规范](docs/team/01_协作开发与复现规范.md) |
+| 现用数据集文件与下载方法 | [BDD100K 五段样本](docs/datasets/08_BDD100K_五段小样本.md) |
+| 当前模块参数 | `configs/`；不要从历史调研或图示反推参数 |
+
+`docs/reference/` 是非规范性的历史调研。权重放 `checkpoints/`，数据放 `data/`，运行结果放 `outputs/`/`runs/`；它们都不提交到 GitHub。修改接口时必须同时修改契约代码、示例与测试。
+
+许可证见 [LICENSE](LICENSE)。

@@ -5,7 +5,7 @@ also returned in ProcessedFrame for immediate in-process consumption.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
@@ -18,6 +18,7 @@ import numpy as np
 
 from ...contracts.base import CalibrationStatus, Ref, Status
 from ...contracts.i3_image_variant import ImageVariant, ImageVariantSet, QualityReport
+from ...contracts.wire import to_wire
 from ...data.bdd100k_loader import LoadedFrame
 from ...utils.config import REPO_ROOT, load_module
 from ..base import ModuleContext, ModuleRun
@@ -43,8 +44,10 @@ class M2Preprocess:
     INTERFACE_IN = ("I2",)
     INTERFACE_OUT = ("I3",)
 
-    def __init__(self, config: dict[str, Any] | None = None) -> None:
+    def __init__(self, config: dict[str, Any] | None = None,
+                 *, config_ref: str = "configs/m2_preprocess.yaml") -> None:
         self.config = config if config is not None else load_module(REPO_ROOT / "configs/m2_preprocess.yaml")
+        self.config_ref = config_ref
         selected = self.config.get("impl", {}).get("enhancement", {}).get("selected")
         if selected != "clahe_lab":
             raise ValueError(f"M2 first pass supports only clahe_lab, got {selected!r}")
@@ -70,13 +73,14 @@ class M2Preprocess:
                                   "QualityReport": processed.quality}, degraded=failures)
 
     def process(self, frame: LoadedFrame, producer_ref: str | None = None,
-                config_ref: str = "configs/m2_preprocess.yaml") -> ProcessedFrame:
+                config_ref: str | None = None) -> ProcessedFrame:
         """Process one frame; fail fast on invalid input, fall back on transform errors."""
         self._validate_input(frame)
         started = perf_counter()
         metadata = frame.metadata
         sequence_id = metadata.sequence_id
         producer = producer_ref or self.config.get("producer_ref", "m2.clahe_lab")
+        resolved_config_ref = config_ref or self.config_ref
         raw = ImageVariant(variant_id="raw", kind="raw", media_ref=metadata.media_ref,
                            coordinate_space=metadata.coordinate_space)
         variants = [raw]
@@ -186,7 +190,7 @@ class M2Preprocess:
             coordinate_space=metadata.coordinate_space,
             calibration_status=metadata.calibration.status,
             manifest_ref=metadata.manifest_ref,
-            producer_ref=producer, config_ref=config_ref,
+            producer_ref=producer, config_ref=resolved_config_ref,
         )
         report = QualityReport(
             frame_id=metadata.frame_id, sequence_id=sequence_id, metrics=metrics,
@@ -195,7 +199,7 @@ class M2Preprocess:
             selected_variant_id=current_id, manifest_ref=metadata.manifest_ref, reason=reasons,
             processing_ms=(perf_counter() - started) * 1000,
             status=Status.UNRELIABLE if failed else Status.OK,
-            producer_ref=producer, config_ref=config_ref,
+            producer_ref=producer, config_ref=resolved_config_ref,
         )
         report_path = self._save_report(report, sequence_id, metadata.frame_index)
         return ProcessedFrame(variant_set, report, images, report_path)
@@ -249,7 +253,7 @@ class M2Preprocess:
         return self._ref(path, "image", f"sha256:{digest}")
 
     def _save_report(self, report: QualityReport, sequence_id: str, frame_index: int) -> Path:
-        content = json.dumps(asdict(report), ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8")
+        content = json.dumps(to_wire(report), ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8")
         digest = hashlib.sha256(content).hexdigest()
         path = self._artifact_dir(sequence_id) / f"{frame_index:06d}_quality_{digest[:12]}.json"
         if not path.exists():

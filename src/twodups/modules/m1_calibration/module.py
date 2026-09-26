@@ -21,5 +21,5 @@ class M1Calibration:
 
     def run(self, *inputs: Any, ctx: ModuleContext) -> ModuleRun:
         raise NotImplementedError(
-            "M1 待阶段二实现：见 docs/architecture/05_实施规划.md（S1）"
+            "M1 通用编排尚未实现；BDD100K 输入请使用 scripts/run_dataloader.py"
         )

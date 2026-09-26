@@ -1,7 +1,7 @@
 """离线链路编排。
 
 顺序：输入 → M1 → M2 →｛M3 ∥ M4 ∥ M5｝→ M6 → 输出。
-对齐规则（见 docs/dataflow/03_数据流与连接逻辑.md）：
+对齐规则（见 docs/architecture/02_模块规范.md）：
   · 三条支路必须使用同一 variant_id；
   · 缺失输入只能等待或降级，不得用其它帧或其它版本顶替；
   · M3 消费 pair(t-1, t)，其结果只能用于第 t 帧及之后。
@@ -20,7 +20,7 @@ class RunResult:
 
 
 def run(config: dict[str, Any]) -> list[RunResult]:
-    """按配置跑完整链路。TODO：按实施规划 S1–S6 逐模块接通。"""
+    """完整链路尚未实现；只允许各模块已有的独立入口运行。"""
     raise NotImplementedError(
-        "链路尚未接通：先完成 M1、M2（docs/architecture/05_实施规划.md 的 S1–S2）"
+        "完整链路未接通；当前可运行 scripts/run_dataloader.py 和 scripts/run_m2.py"
     )

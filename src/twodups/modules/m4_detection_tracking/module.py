@@ -21,5 +21,5 @@ class M4DetectionTracking:
 
     def run(self, *inputs: Any, ctx: ModuleContext) -> ModuleRun:
         raise NotImplementedError(
-            "M4 待阶段四实现：见 docs/architecture/05_实施规划.md（S3–S4）"
+            "M4 尚未实现；见 docs/architecture/02_模块规范.md"
         )

@@ -1,6 +1,7 @@
 # M2 第一版：BDD100K RGB 帧质量评价与非几何增强；阈值尚需下游验证。
 module: M2
 name: 输入规范化、图像预处理与质量评价
+status: initial_implementation
 producer_ref: m2.clahe_lab
 
 impl:

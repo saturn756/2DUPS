@@ -21,5 +21,5 @@ class M6Topology:
 
     def run(self, *inputs: Any, ctx: ModuleContext) -> ModuleRun:
         raise NotImplementedError(
-            "M6 待阶段五实现：见 docs/architecture/05_实施规划.md（S5）"
+            "M6 尚未实现；见 docs/architecture/02_模块规范.md"
         )

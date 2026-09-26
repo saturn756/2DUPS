@@ -6,9 +6,14 @@ from typing import Any
 from ..contracts.i9_evaluation_record import EvaluationRecord
 
 
-def build_record(run_id: str, module_ref: str, metrics: dict[str, float], **kwargs) -> EvaluationRecord:
-    """构造一条评测记录。TODO：接入失败标签与样本引用。"""
-    return EvaluationRecord(run_id=run_id, module_ref=module_ref, metrics=metrics, **kwargs)
+def build_record(run_id: str, module_ref: str, metrics: dict[str, float], *,
+                 implementation_ref: str, manifest_ref: str, evaluation_config_ref: str,
+                 producer_ref: str, config_ref: str, **kwargs) -> EvaluationRecord:
+    """Construct an I9 record only when its provenance is supplied."""
+    return EvaluationRecord(run_id=run_id, module_ref=module_ref, metrics=metrics,
+                            implementation_ref=implementation_ref, manifest_ref=manifest_ref,
+                            evaluation_config_ref=evaluation_config_ref, producer_ref=producer_ref,
+                            config_ref=config_ref, **kwargs)
 
 
 def dump(records: list[EvaluationRecord], path: str) -> None:

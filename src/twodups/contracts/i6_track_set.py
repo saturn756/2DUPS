@@ -1,9 +1,9 @@
-"""I6 TrackSet（边 E08 必需）。"""
+"""I6 TrackSet: cross-frame identities on the current image plane."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .base import Ref, TrackState
+from .base import BBox, Ref, Status, TrackState
 
 
 @dataclass
@@ -11,8 +11,24 @@ class Track:
     track_id: str
     class_ref: str
     state: TrackState
-    frames: list[str] = field(default_factory=list)
+    current_bbox: BBox | None = None
     confidence: float | None = None
+    age: int = 0
+    missed_frames: int = 0
+    last_detection_id: str | None = None
+    history_ref: Ref | None = None
+
+    def __post_init__(self) -> None:
+        if self.state is TrackState.LOST and self.current_bbox is not None:
+            raise ValueError("Lost track cannot present a stale bbox as current")
+
+
+@dataclass
+class Association:
+    method: str
+    motion_compensation_used: bool
+    match_result_ref: Ref | None = None
+    reason: str | None = None
 
 
 @dataclass
@@ -21,7 +37,15 @@ class TrackSet:
 
     INTERFACE = "I6"
 
+    sequence_id: str
     frame_id: str
+    variant_id: str
+    coordinate_space: str
+    status: Status
+    association: Association
+    producer_ref: str
+    config_ref: str
     tracks: list[Track] = field(default_factory=list)
     detection_missing: bool = False
-    association_ref: Ref | None = None         # 是否使用相机运动补偿
+    reason: str | None = None
+    schema_version: str = "1.0"

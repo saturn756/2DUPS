@@ -1,4 +1,4 @@
-"""I1 DatasetManifest（边 E03）：运行级前提，先于任何样本处理。"""
+"""I1 DatasetManifest: required run-level dataset identity and split."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

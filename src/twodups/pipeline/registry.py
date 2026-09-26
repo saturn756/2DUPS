@@ -21,7 +21,7 @@ def register(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
 
 def get(name: str) -> Callable[..., Any]:
     if name not in _REGISTRY:
-        raise KeyError(f"未注册的实现：{name}（见 configs/ 与 docs/methods/）")
+        raise KeyError(f"未注册的实现：{name}（检查模块实现与 configs/ 配置）")
     return _REGISTRY[name]
 
 

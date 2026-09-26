@@ -26,7 +26,8 @@ def main() -> int:
     config = load_module(args.module_config, args.common)
     if args.dry_run:
         print(f"模块：{config.get('module')} {config.get('name')}")
-        print(f"选定实现：{config.get('impl')}")
+        print(f"实现状态：{config.get('status', 'unknown')}")
+        print(f"实现/候选配置：{config.get('impl')}")
         print(f"日志目录：{config.get('runtime', {}).get('log_dir')}")
         return 0
 
