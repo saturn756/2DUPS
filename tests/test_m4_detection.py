@@ -82,7 +82,10 @@ def test_empty_detection_is_not_failure() -> None:
 
 
 def test_no_checkpoint_never_pretends_success() -> None:
-    module = M4DetectionTracking(_config())
+    config = deepcopy(_config())
+    config["params"]["detection"]["checkpoint_path"] = None
+    config["params"]["detection"]["checkpoint_sha256"] = None
+    module = M4DetectionTracking(config)
     result = module.detect(*_input())
     assert result.status is Status.FAILED
     assert result.detection_missing is True and result.objects == []
@@ -113,6 +116,7 @@ def test_invalid_bbox_fails_without_partial_objects() -> None:
 def test_checkpoint_path_and_hash_must_be_paired() -> None:
     config = deepcopy(_config())
     config["params"]["detection"]["checkpoint_path"] = "checkpoints/m4/yolo11n.pt"
+    config["params"]["detection"]["checkpoint_sha256"] = None
     with pytest.raises(ValueError, match="configured together"):
         M4DetectionTracking(config)
 

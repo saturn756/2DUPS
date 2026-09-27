@@ -13,6 +13,7 @@ alignment:
   frame_key: frame_id
   variant_key: variant_id
   variant_policy: same_for_all_branches       # M2 决定默认版本，三条支路必须一致
+  temporal_variant_policy: skip_i4_on_change  # 相邻帧默认版本不同，M3 不提供可用几何；M4 仍逐帧检测
   allow_future_frames: false
 
 # 运行与日志

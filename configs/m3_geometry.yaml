@@ -13,6 +13,7 @@ io:
 # 待填（阶段四）：特征与匹配方式、外点剔除策略、可用性判据与阈值
 params:
   pair: adjacent                   # pair(t-1, t)，结果只用于 t 帧及之后
+  variant_switch: skip_i4_on_change # 未来 M3 实现时：不同 default_variant 不做匹配/补偿
   ratio_test: 0.8
   ransac: {}                       # 尚未设定
   status_levels: [ok, unreliable, failed]
