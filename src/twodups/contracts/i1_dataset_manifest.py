@@ -30,5 +30,5 @@ class DatasetManifest:
     splits: dict[str, list[str]] = field(default_factory=dict)
     checksum: str | None = None
     schema_version: str = "1.0"
-    producer_ref: str = "m1.dataset_manifest"
+    producer_ref: str = "m0.dataset_manifest"
     config_ref: str = "configs/dataset_manifest.yaml"

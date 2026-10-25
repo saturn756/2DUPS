@@ -1,0 +1,13 @@
+# E 评测层：各任务指标独立统计，按 sequence 切分避免帧泄漏。
+module: E
+name: 统一评测与结果报告
+status: planned
+
+tasks:
+  detection: [map, ap50, precision, recall, false_positive_rate, critical_object_miss_rate]
+  segmentation: [miou, dice, pixel_accuracy, lane_f1]
+  tracking: [mota, idf1, id_switches, track_continuity]
+  system: [fps, latency_ms, gpu_memory_mb]
+
+split_policy: sequence_disjoint
+producer_ref: evaluation.metrics

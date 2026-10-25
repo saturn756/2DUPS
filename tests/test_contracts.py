@@ -16,7 +16,7 @@ def _graph() -> contracts.SceneGraph2D:
     return contracts.SceneGraph2D(
         sequence_id="s", frame_id="s:000000", variant_id="raw", coordinate_space="pixel",
         window=contracts.FrameWindow(frame_ids=["s:000000"]),
-        producer_ref="m6.rule_based_scene_graph", config_ref="configs/m6_topology.yaml",
+        producer_ref="m5.integration", config_ref="configs/m5_integration.yaml",
     )
 
 
@@ -28,8 +28,8 @@ def test_scene_graph_defaults_to_image_plane() -> None:
     with pytest.raises(ValueError, match="degraded"):
         contracts.SceneGraph2D(
             sequence_id="s", frame_id="s:000000", variant_id="raw", coordinate_space="pixel",
-            window=contracts.FrameWindow(["s:000000"]), producer_ref="m6.rules",
-            config_ref="configs/m6_topology.yaml", missing_inputs=["I7"],
+            window=contracts.FrameWindow(["s:000000"]), producer_ref="m5.integration",
+            config_ref="configs/m5_integration.yaml", missing_inputs=["I7"],
         )
 
 
@@ -61,7 +61,7 @@ def test_match_result_has_status_and_producer() -> None:
     with pytest.raises(ValueError, match="requires a transform"):
         contracts.MatchResult(
             sequence_id="s", pair=contracts.FramePair("s:0", "s:1", "raw", "pixel"),
-            status=Status.OK, producer_ref="m3.geometry", config_ref="configs/m3_geometry.yaml",
+            status=Status.OK, producer_ref="optional.geometry", config_ref="configs/optional_geometry.yaml",
         )
 
 
@@ -98,7 +98,7 @@ def test_resized_segmentation_requires_alignment() -> None:
             source_size=contracts.ImageSize(1280, 720), map_size=contracts.ImageSize(640, 360),
             class_map_ref=contracts.Ref("mask.png"), class_schema_ref="schema.json",
             alignment_ref=None, status=Status.OK, producer_ref="m5.segmenter",
-            config_ref="configs/m5_segmentation.yaml",
+            config_ref="configs/m3_segmentation.yaml",
         )
 
 

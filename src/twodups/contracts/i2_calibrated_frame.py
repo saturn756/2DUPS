@@ -36,5 +36,5 @@ class CalibratedFrame:
     manifest_ref: str | None = None
     variant_id: str = "raw"
     schema_version: str = "1.0"
-    producer_ref: str = "m1.bdd100k_video_loader"
-    config_ref: str = "configs/m1_calibration.yaml"
+    producer_ref: str = "m0.bdd100k_adapter"
+    config_ref: str = "configs/m0_data_ingest.yaml"

@@ -1,0 +1,29 @@
+# M5 检测、分割、跟踪结果集成（骨架）
+module: M5
+name: 系统集成与场景理解
+status: planned
+
+impl:
+  candidate: rule_based_scene_graph
+
+io:
+  inputs: [DetectionSet, TrackSet, SegmentationMap, MatchResult_optional]
+  outputs: [SceneGraph2D, rendered_video, integration_report]
+
+# 待填（阶段五）：关系类型集合与判定规则、证据类型与置信度口径、降级判定条件
+params:
+  alignment:
+    require_same_frame: true
+    require_same_variant: true
+    require_same_coordinate_space: true
+  window:
+    length: 1
+    allow_future_frames: false
+  node_types: [track, region]
+  relations: [belongs_to, inside_region, left_of, right_of, overlaps, appears_in]
+  geometry_status_levels: [image_plane, degraded]
+  use_metric_geometry: false
+  evidence_required: true          # 只输出证据充分的关系
+  reject_unaligned_inputs: true
+
+producer_ref: m5.integration

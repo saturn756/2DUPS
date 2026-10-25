@@ -34,8 +34,8 @@ class ImageVariantSet:
     calibration_status: CalibrationStatus
     manifest_ref: str | None = None
     schema_version: str = "1.0"
-    producer_ref: str = "m2.clahe_lab"
-    config_ref: str = "configs/m2_preprocess.yaml"
+    producer_ref: str = "m1.clahe_lab"
+    config_ref: str = "configs/m1_preprocess.yaml"
 
     def __post_init__(self) -> None:
         ids = [variant.variant_id for variant in self.variants]
@@ -84,8 +84,8 @@ class QualityReport:
     processing_ms: float = 0.0
     status: Status = Status.OK
     schema_version: str = "1.0"
-    producer_ref: str = "m2.quality_gate"
-    config_ref: str = "configs/m2_preprocess.yaml"
+    producer_ref: str = "m1.quality_gate"
+    config_ref: str = "configs/m1_preprocess.yaml"
 
     def __post_init__(self) -> None:
         if self.gate_decision not in {"use_raw", "use_processed"}:

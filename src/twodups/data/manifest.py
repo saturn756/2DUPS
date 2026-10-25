@@ -59,7 +59,7 @@ def load(path: str | Path) -> DatasetManifest:
         splits=raw.get("splits", {}),
         checksum=checksum,
         schema_version=str(raw.get("schema_version", "1.0")),
-        producer_ref=raw.get("producer_ref", "m1.dataset_manifest"),
+        producer_ref=raw.get("producer_ref", "m0.dataset_manifest"),
         config_ref=raw.get("config_ref", str(path)),
     )
     problems = validate(manifest)

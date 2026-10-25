@@ -8,26 +8,26 @@ opencv-python
 PyYAML
 tqdm
 
-# ---- 数据与评测 ----
-av                         # M1: MOV/H.264 流式解码及旋转元数据
+# ---- M0 数据接入与 E 评测 ----
+av                         # M0: MOV/H.264 流式解码及旋转元数据
 pandas
 openpyxl
 pillow
 matplotlib
 
-# ---- M2 图像增强与去噪 ----
-# 当前 M2 只使用 OpenCV
+# ---- M1 图像预处理 ----
+# 当前 M1 只使用 OpenCV
 
-# ---- M3 特征检测与匹配 ----
-# （SIFT/FLANN 由 opencv-python 提供；XFeat 对照实现按官方仓库引入）
+# ---- 可选帧间几何 ----
+# SIFT/FLANN 由 opencv-python 提供；该扩展不属于 M0–M5 主链路
 
-# ---- M4 目标检测与跟踪 ----
+# ---- M2 目标检测与 M4 多目标跟踪 ----
 torch==2.8.0+cu128
 torchvision==0.23.0+cu128
 ultralytics==8.3.184     # YOLO11n 检测适配器；不包含模型权重
 
-# ---- M5 语义分割 ----
+# ---- M3 语义/车道分割 ----
 # （PIDNet 以官方仓库为准，按需引入）
 
-# ---- M6 拓扑推理 ----
-# （规则化实现，暂无额外依赖）
+# ---- M5 系统集成 ----
+# （规则化 2D 场景集成，暂无额外依赖）

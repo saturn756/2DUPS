@@ -1,0 +1,34 @@
+# M2 检测适配器已接入官方 YOLO11n 权重；训练和精度评测另行进行。
+module: M2
+name: 多目标检测
+status: partial_detection
+
+impl:
+  detection:
+    selected: yolo11n             # Ultralytics YOLO11n，COCO80 类别；不自动下载
+
+io:
+  inputs: [ImageVariantSet]       # I3 + 同进程 default_variant 的 RGB 像素
+  outputs: [DetectionSet]         # I5；I6 由 M4 独立维护
+
+params:
+  detection:
+    scope: full_frame              # 第一版默认全图；ROI 只能作为经验证的优化策略
+    frequency: every_frame         # 第一版每帧检测；跳帧检测作为后续优化
+    checkpoint_path: checkpoints/m2_detection/yolo11n/v1/yolo11n.pt
+    checkpoint_sha256: 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1
+    device: 0                       # 默认使用首张 CUDA GPU；无 GPU 的机器需另行配置
+    input_size: 640
+    score_threshold: 0.25
+    nms_iou: 0.70
+    max_detections: 300
+    class_map:                     # YOLO11n COCO80 ID -> 名称与 I5 class_ref；只检测这些类别
+      0: {name: person, ref: coco.person}
+      1: {name: bicycle, ref: coco.bicycle}
+      2: {name: car, ref: coco.car}
+      3: {name: motorcycle, ref: coco.motorcycle}
+      5: {name: bus, ref: coco.bus}
+      7: {name: truck, ref: coco.truck}
+      9: {name: traffic light, ref: coco.traffic_light}
+      11: {name: stop sign, ref: coco.stop_sign}
+producer_ref: m2.yolo11_detector

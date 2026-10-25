@@ -92,8 +92,8 @@ def test_all_json_examples_parse_and_cover_required_fields() -> None:
 def test_to_wire_emits_interface_discriminator() -> None:
     graph = contracts.SceneGraph2D(
         sequence_id="s", frame_id="s:0", variant_id="raw", coordinate_space="pixel",
-        window=contracts.FrameWindow(["s:0"]), producer_ref="m6.rules",
-        config_ref="configs/m6_topology.yaml",
+        window=contracts.FrameWindow(["s:0"]), producer_ref="m5.integration",
+        config_ref="configs/m5_integration.yaml",
     )
     wire = contracts.to_wire(graph)
     assert wire["interface"] == "I8"

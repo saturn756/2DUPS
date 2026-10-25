@@ -2,7 +2,7 @@
 """跑完整链路（骨架）。
 
 用法：
-    python scripts/run_pipeline.py --module-config configs/m4_detection_tracking.yaml --dry-run
+    python scripts/run_pipeline.py --module-config configs/m2_detection.yaml --dry-run
 链路接通前只做配置解析与打印，便于先校验配置。
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ from twodups.utils.config import load_module  # noqa: E402
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="2DUPS 链路运行入口")
-    ap.add_argument("--module-config", required=True, help="模块配置，如 configs/m5_segmentation.yaml")
+    ap.add_argument("--module-config", required=True, help="模块配置，如 configs/m2_detection.yaml")
     ap.add_argument("--common", default="configs/common.yaml", help="公共配置")
     ap.add_argument("--dry-run", action="store_true", help="只解析并打印配置")
     args = ap.parse_args()

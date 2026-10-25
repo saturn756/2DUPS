@@ -8,9 +8,9 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from twodups.data.bdd100k_loader import BDD100KVideoLoader  # noqa: E402
 from twodups.data.manifest import load  # noqa: E402
-from twodups.utils.config import REPO_ROOT  # noqa: E402
+from twodups.modules.m0_data_ingest import M0DataIngest  # noqa: E402
+from twodups.utils.config import REPO_ROOT, load_module  # noqa: E402
 
 
 def main() -> int:
@@ -23,7 +23,7 @@ def main() -> int:
     args = parser.parse_args()
 
     manifest = load(args.manifest)
-    loader = BDD100KVideoLoader(manifest, root=args.root)
+    m0 = M0DataIngest(load_module(REPO_ROOT / "configs/m0_data_ingest.yaml"))
     sample_ids = [args.sample_id] if args.sample_id else manifest.splits[args.split]
     for sample_id in sample_ids:
         frames = 0
@@ -31,7 +31,7 @@ def main() -> int:
         labels = []
         size = None
         rotation = None
-        for frame in loader.iter_sample(sample_id, max_frames=args.max_frames):
+        for frame in m0.iter_sample(manifest, sample_id, root=args.root, max_frames=args.max_frames):
             frames += 1
             metadata = frame.metadata
             size = (metadata.image_size.width, metadata.image_size.height)

@@ -1,4 +1,4 @@
-"""I6 TrackSet: cross-frame identities on the current image plane."""
+"""I6 TrackSet: M4 cross-frame identities on the current image plane."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

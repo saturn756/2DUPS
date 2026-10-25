@@ -1,0 +1,24 @@
+# 可选帧间几何估计（不属于课程主模块编号）
+module: OPTIONAL_GEOMETRY
+name: 帧间几何估计
+status: planned
+
+impl:
+  candidate: sift_flann_ransac     # 尚未实现，不是可运行选定方法
+
+io:
+  inputs: [ImageVariantSet]        # 图像对（相邻两帧，同一 variant_id）
+  outputs: [MatchResult]           # I4（可选边，供 M4 跟踪与 M5）
+
+# 待填（阶段四）：特征与匹配方式、外点剔除策略、可用性判据与阈值
+params:
+  pair: adjacent                   # pair(t-1, t)，结果只用于 t 帧及之后
+  variant_switch: skip_i4_on_change # 未来 M3 实现时：不同 default_variant 不做匹配/补偿
+  ratio_test: 0.8
+  ransac: {}                       # 尚未设定
+  status_levels: [ok, unreliable, failed]
+  min_inlier_ratio: null           # 待填
+  transform_semantics: image_plane_transform
+  use_metric_geometry: false
+
+producer_ref: optional.geometry

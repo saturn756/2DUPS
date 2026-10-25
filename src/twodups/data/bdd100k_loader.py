@@ -1,4 +1,4 @@
-"""Stream BDD100K MOV frames into M1's I2 metadata and RGB pixels.
+"""Stream BDD100K MOV frames into M0's I2 metadata and RGB pixels.
 
 The decoded image is an in-process value.  I2 itself remains serializable and
 points back to the source video and frame index; no frame cache is written.

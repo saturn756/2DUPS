@@ -4,7 +4,7 @@ version: '2026-09-24'
 schema_version: '1.0'
 source: BDD100K
 license: BDD100K BAIR Open Research Commons educational and research use
-producer_ref: m1.dataset_manifest
+producer_ref: m0.dataset_manifest
 config_ref: configs/dataset_manifest.yaml
 splits:
   train:
