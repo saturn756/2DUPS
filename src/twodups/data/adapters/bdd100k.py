@@ -23,3 +23,8 @@ class BDD100KAdapter:
 
     def validate(self, manifest: DatasetManifest) -> list[str]:
         return [] if manifest.source == "BDD100K" else ["manifest source is not BDD100K"]
+
+
+def build_bdd100k_adapter(manifest: DatasetManifest, *, root: str | Path = ".") -> BDD100KAdapter:
+    """Registry factory; construction does not read the media file."""
+    return BDD100KAdapter(manifest, root=root)

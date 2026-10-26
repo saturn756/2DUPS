@@ -14,6 +14,11 @@ class Sample:
     timestamp: float | None = None
     annotation_ref: Ref | None = None
     slice_tags: list[str] = field(default_factory=list)
+    # Image sequences have no container PTS, so their frame rate must be
+    # declared in I1. Video sources may leave it unset and use the container
+    # metadata instead.
+    fps: float | None = None
+    calibration_ref: Ref | None = None
 
 
 @dataclass
