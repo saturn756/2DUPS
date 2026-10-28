@@ -26,4 +26,4 @@ params:
   evidence_required: true          # 只输出证据充分的关系
   reject_unaligned_inputs: true
 
-producer_ref: m5.integration
+producer_ref: null

@@ -18,7 +18,7 @@ Collaborators use separate servers and checkouts. Never assume another member's 
 | Part | Status | Run command / implementation location |
 |---|---|---|
 | BDD100K input (I1/I2) | Working for 5-video subset only | `scripts/run_dataloader.py`; `src/twodups/data/` |
-| M0 data ingest (I1/I2) | BDD100K five-video adapter works; other adapters are placeholders | `scripts/run_dataloader.py`; `src/twodups/data/` |
+| M0 data ingest (I1/I2) | BDD100K videos and KITTI Road single images supported; KITTI covered by synthetic tests, not real-data validation | `scripts/run_dataloader.py`; `src/twodups/data/` |
 | M1 preprocessing (I3) | Initial quality gate, denoising and CLAHE enhancement; thresholds uncalibrated | `scripts/run_m1_preprocess.py`; `src/twodups/modules/m1_preprocess/` |
 | M2 detection (I5) | Official YOLO11n weight hash pinned; BDD100K → M1 → GPU inference verified on one server, not accuracy-evaluated | `scripts/run_m2_detection.py --sample-id 359ce11c-e2f58b33 --max-frames 3`; `src/twodups/modules/m2_detection/` |
 | M3 segmentation; M5 integration; E evaluation | Planned / `NotImplementedError` | Do not report as working; implement one module at a time |

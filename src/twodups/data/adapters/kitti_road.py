@@ -111,9 +111,3 @@ def _decode(path: Path) -> np.ndarray:
     if decoded.ndim != 3 or decoded.shape[2] != 3:
         raise ValueError(f"Expected 3-channel image: {path.name}")
     return np.ascontiguousarray(cv2.cvtColor(decoded, cv2.COLOR_BGR2RGB))
-
-
-def build_kitti_road_adapter(manifest: DatasetManifest,
-                             *, root: str | Path = ".") -> KittiRoadAdapter:
-    """注册表工厂：只构造对象，不读图像。"""
-    return KittiRoadAdapter(manifest, root=root)

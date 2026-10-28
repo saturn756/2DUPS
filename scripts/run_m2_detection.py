@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BDD100K DataLoader → M1 → M2 detection smoke test. No implicit download."""
+"""M0 → M1 → M2 detection smoke test for a selected manifest. No download."""
 from __future__ import annotations
 
 import argparse
@@ -21,7 +21,8 @@ from twodups.utils.config import REPO_ROOT, load_module  # noqa: E402
 def main() -> int:
     parser = argparse.ArgumentParser(description="M2 YOLO11 检测冒烟测试（不包含 M4 跟踪）")
     parser.add_argument("--config", type=Path, default=REPO_ROOT / "configs/m2_detection.yaml")
-    parser.add_argument("--sample-id", help="BDD100K 五段样本中的一个视频 ID")
+    parser.add_argument("--manifest", type=Path, default=REPO_ROOT / "configs/dataset_manifest.yaml")
+    parser.add_argument("--sample-id", help="数据清单中的样本 ID")
     parser.add_argument("--start-frame", type=int, default=0, help="首个推理帧索引；之前帧只解码、不做 M1/M2")
     parser.add_argument("--max-frames", type=int, default=1)
     parser.add_argument("--json", action="store_true", help="逐帧打印 I5 JSON，便于检查真实检测框")
@@ -44,7 +45,7 @@ def main() -> int:
         parser.error("--sample-id is required unless --dry-run is used")
     if params["checkpoint_path"] is None:
         parser.error("configure checkpoint_path and checkpoint_sha256 before inference; no download is attempted")
-    manifest = load(REPO_ROOT / "configs/dataset_manifest.yaml")
+    manifest = load(args.manifest)
     m0 = M0DataIngest(load_module(REPO_ROOT / "configs/m0_data_ingest.yaml"))
     m1 = M1Preprocess()
     m2 = M2Detection(load_module(config_path), config_ref=config_ref)

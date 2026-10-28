@@ -14,6 +14,9 @@ from twodups.contracts.base import CalibrationStatus, Ref
 from twodups.contracts.i1_dataset_manifest import DatasetManifest, Sample
 from twodups.data.adapters import build
 from twodups.data.adapters.kitti_road import KittiRoadAdapter
+from twodups.modules.m0_data_ingest import M0DataIngest
+from twodups.modules.m1_preprocess import M1Preprocess
+from twodups.utils.config import REPO_ROOT, load_module
 from twodups.evaluation.kitti_road import (
     evaluate_binary, gt_key, pair, pred_key,
 )
@@ -89,8 +92,19 @@ class TestKittiRoadAdapter(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "escapes repository"):
             list(adapter.iter_sample("um_000000"))
 
-    def test_registry_builds_kitti_road_adapter(self) -> None:
+    def test_build_selects_kitti_road_adapter(self) -> None:
         self.assertIsInstance(build(_manifest(), root=self.root), KittiRoadAdapter)
+
+    def test_m0_frame_is_consumed_by_m1(self) -> None:
+        config = load_module(REPO_ROOT / "configs/m1_preprocess.yaml")
+        config["params"]["output_dir"] = str(self.root / "processed")
+        frame = next(M0DataIngest().iter_sample(_manifest(), "um_000000", root=self.root))
+        processed = M1Preprocess(config).process(frame)
+        self.assertEqual(processed.variants.frame_id, frame.metadata.frame_id)
+        self.assertEqual(processed.variants.sequence_id, frame.metadata.sequence_id)
+        self.assertEqual(processed.variants.default_variant, "raw")
+        np.testing.assert_array_equal(processed.default_image_rgb, frame.image_rgb)
+        self.assertTrue(processed.report_path.is_file())
 
     def _write_calibration(self, *, width: int = 12, height: int = 8) -> Ref:
         payload = {
@@ -149,7 +163,7 @@ class TestKittiRoadPairingAndMetrics(unittest.TestCase):
 
     def _gt_mask(self, name: str, positive_rows: slice, *, ignore_patch: bool = False) -> None:
         mask = np.zeros((10, 10, 3), np.uint8)
-        mask[:, :] = (255, 0, 0)                      # 红=背景（BGR 存同值不影响对称色）
+        mask[:, :] = (0, 0, 255)                      # OpenCV BGR: red background
         mask[positive_rows, :] = (255, 0, 255)        # 洋红=正类
         if ignore_patch:
             mask[0:2, 0:2] = 0                        # 黑=ignore
@@ -214,6 +228,19 @@ class TestKittiRoadPairingAndMetrics(unittest.TestCase):
         self._gt_mask("um_road_000000.png", slice(5, 10))
         with self.assertRaises(FileNotFoundError):
             pair(self.pred, self.gt, tag="lane")
+
+    def test_unknown_ground_truth_color_is_rejected(self) -> None:
+        _write_png(self.pred / "um" / "um_000000_class_aaaa.png", np.zeros((10, 10), np.uint8))
+        _write_png(self.gt / "um_road_000000.png", np.full((10, 10, 3), 100, np.uint8))
+        with self.assertRaisesRegex(ValueError, "color"):
+            evaluate_binary(pair(self.pred, self.gt, tag="road"), target_id=1)
+
+    def test_duplicate_prediction_is_rejected(self) -> None:
+        for suffix in ("aaaa", "bbbb"):
+            _write_png(self.pred / "um" / f"um_000000_class_{suffix}.png", np.zeros((10, 10), np.uint8))
+        self._gt_mask("um_road_000000.png", slice(5, 10))
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            pair(self.pred, self.gt, tag="road")
 
     def test_size_mismatch_is_an_error(self) -> None:
         _write_png(self.pred / "um" / "um_000000_class_aaaa.png", np.zeros((9, 10), np.uint8))

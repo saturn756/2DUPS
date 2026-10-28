@@ -36,7 +36,8 @@ def main() -> int:
             metadata = frame.metadata
             size = (metadata.image_size.width, metadata.image_size.height)
             rotation = metadata.rotation_degrees_clockwise
-            if metadata.source_timestamp is None or abs(metadata.timestamp - metadata.source_timestamp) > 1e-6:
+            if metadata.timestamp is not None and (metadata.source_timestamp is None or
+                                                   abs(metadata.timestamp - metadata.source_timestamp) > 1e-6):
                 corrected += 1
             for annotation in frame.annotations:
                 labels.append((metadata.frame_index, len(annotation.objects),

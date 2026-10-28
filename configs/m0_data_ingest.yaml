@@ -4,7 +4,7 @@ name: 数据接入与标准化
 status: partial
 
 impl:
-  adapters: [bdd100k, bdd100k_image, image_sequence, kitti_road]
+  adapters: [bdd100k, kitti_road]
   planned_adapters: [kitti_tracking, cityscapes, culane, mot]
   calibration: optional_metadata   # KITTI Road 可由 calib/P2 生成 valid/stale；其余无验证内参时输出 missing
   storage: local_repository

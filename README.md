@@ -6,7 +6,7 @@
 
 当前实现状态：
 
-- M0：BDD100K 五段样本适配和流式解码可用；其他数据集适配器待补齐。
+- M0：BDD100K 五段视频流式解码、KITTI Road 单图与标定接入可用；KITTI 当前只通过合成数据测试，其他数据集适配器待补齐。
 - M1：RGB 校验、质量评价、去噪和 CLAHE 低照度增强可用，阈值仍是初始值。
 - M2：官方 YOLO11n 检测适配器可用，已在一台服务器验证真实 GPU 推理，未做精度评测。
 - M3：语义/车道分割接口和配置骨架已建立，算法待接入。
@@ -53,6 +53,18 @@ python scripts/run_m2_detection.py --sample-id 359ce11c-e2f58b33 --start-frame 3
 ```
 
 第二条命令输出 I5 JSON，用于检查真实检测框和接口对齐，不计算准确率。`python scripts/run_pipeline.py --module-config configs/m2_detection.yaml --dry-run` 只解析配置。
+
+## KITTI Road 图片输入
+
+按 KITTI 原始目录准备 `data/raw/kitti_road/training/` 下的 `image_2/`、`gt_image_2/` 和 `calib/`，再运行：
+
+```bash
+python scripts/make_kitti_road_manifest.py
+python scripts/run_m1_preprocess.py --manifest data/raw/kitti_road/manifest.yaml --sample-id um_000000 --max-frames 1
+python scripts/run_m2_detection.py --manifest data/raw/kitti_road/manifest.yaml --sample-id um_000000 --max-frames 1
+```
+
+每张图片独立成样本，不提供视频时序或跟踪真值。检测仍用当前 M2 权重，不读取道路真值掩码。`evaluation/kitti_road.py` 仅提供本地图像平面的二值指标辅助，不等同于官方 BEV 评测或完整 E 层。通用自采视频入口尚未实现。
 
 ## 维护入口
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from ...contracts.i1_dataset_manifest import DatasetManifest
-from ...data.adapters.bdd100k import BDD100KAdapter
+from ...data.adapters import DatasetAdapter, build
 from ...data.bdd100k_loader import LoadedFrame
 from ...data.manifest import validate
 from ...utils.config import REPO_ROOT
@@ -25,11 +25,9 @@ class M0DataIngest:
     def __init__(self, config: dict[str, Any] | None = None) -> None:
         self.config = config or {}
 
-    def adapter(self, manifest: DatasetManifest, *, root: str | Path = REPO_ROOT) -> BDD100KAdapter:
+    def adapter(self, manifest: DatasetManifest, *, root: str | Path = REPO_ROOT) -> DatasetAdapter:
         """Create the configured dataset adapter without coupling later modules to BDD100K."""
-        if manifest.source != "BDD100K":
-            raise ValueError(f"No M0 adapter is registered for {manifest.source!r}")
-        adapter = BDD100KAdapter(manifest, root=root)
+        adapter = build(manifest, root=root)
         problems = validate(manifest) + adapter.validate(manifest)
         if problems:
             raise ValueError("Invalid M0 manifest: " + "; ".join(problems))

@@ -13,7 +13,7 @@ import numpy as np
 from twodups.contracts.base import CalibrationStatus, Ref
 from twodups.contracts.i1_dataset_manifest import DatasetManifest, Sample
 from twodups.contracts.i2_calibrated_frame import ImageSize
-from twodups.data.adapters.image_sequence import ImageSequenceAdapter
+from twodups.modules.m0_data_ingest import M0DataIngest
 from twodups.data.calibration import (
     SCHEMA, CalibrationResolver, CameraParams, kitti_camera_payload, load,
     parse, parse_kitti_projection, state_for,
@@ -212,9 +212,9 @@ class TestCalibrationResolverAndAdapters(unittest.TestCase):
     def _manifest(self, *, calibration_ref: Ref | None, width: int = 64,
                   height: int = 48) -> DatasetManifest:
         return DatasetManifest(
-            manifest_id="calib", version="1", source="image_sequence", license="test",
-            samples=[Sample("s1", "s1", Ref("seq", "image_sequence"),
-                            slice_tags=["synthetic"], fps=10.0,
+            manifest_id="calib", version="1", source="KITTI_ROAD", license="test",
+            samples=[Sample("s1", "s1", Ref("seq/frame_000000.png", "image_file"),
+                            slice_tags=["synthetic"],
                             calibration_ref=calibration_ref)],
             splits={"train": ["s1"]},
         )
@@ -231,7 +231,7 @@ class TestCalibrationResolverAndAdapters(unittest.TestCase):
         path = _write_params(self.root)
         ref = Ref(path.name, "camera_params", _checksum(path))
         manifest = self._manifest(calibration_ref=ref)
-        frame = next(ImageSequenceAdapter(manifest, root=self.root).iter_sample("s1"))
+        frame = next(M0DataIngest().iter_sample(manifest, "s1", root=self.root))
         self.assertIs(frame.metadata.calibration.status, CalibrationStatus.VALID)
         self.assertEqual(frame.metadata.calibration.params_ref.checksum, ref.checksum)
 
@@ -239,8 +239,8 @@ class TestCalibrationResolverAndAdapters(unittest.TestCase):
         payload = dict(PARAMS, image_size={"width": 128, "height": 96})
         path = _write_params(self.root, payload)
         ref = Ref(path.name, "camera_params", _checksum(path))
-        frame = next(ImageSequenceAdapter(self._manifest(calibration_ref=ref),
-                                         root=self.root).iter_sample("s1"))
+        frame = next(M0DataIngest().iter_sample(self._manifest(calibration_ref=ref),
+                                                 "s1", root=self.root))
         self.assertIs(frame.metadata.calibration.status, CalibrationStatus.STALE)
         self.assertIn("calibration_image_size_mismatch", frame.metadata.calibration.reason)
 
