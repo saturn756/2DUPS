@@ -116,3 +116,23 @@ python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-conf
 ```
 
 SHA-256 与配置值比较；适配器强制校验权重和类别模式。COCO m 没有泛交通标志类别，不能直接代替 BDD100K 专用 n 权重。
+
+## BDD100K 专用 n/s/m 权重实测
+
+后续权重对照与继续微调统一使用 BDD100K 专用 checkpoint；COCO 配置保留为历史基线。三套权重均已校验固定版本、SHA-256 和 10 类道路模式。
+
+| 版本 | 配置 | 权重来源 |
+|---|---|---|
+| n | `configs/m2_detection_bdd100k.yaml` | [dronefreak/bdd100k-yolo11n](https://huggingface.co/dronefreak/bdd100k-yolo11n) |
+| s | `configs/m2_detection_bdd100k_yolo11s.yaml` | [dronefreak/bdd100k-yolo11s](https://huggingface.co/dronefreak/bdd100k-yolo11s) |
+| m | `configs/m2_detection_bdd100k_yolo11m.yaml` | [dronefreak/bdd100k-yolo11m](https://huggingface.co/dronefreak/bdd100k-yolo11m) |
+
+[本轮实测数据与限制](docs/experiments/10_BDD100K专用权重对照.md)：同一批 10 片段，每模型 3000 帧、640 输入；白天固定 raw，夜间沿用原缓存输入。精度仅来自 5 个稀疏标注帧，不是全视频 mAP。另有五帧 960 分辨率敏感性检查，不包含完整 960 跟踪。
+
+按配置指定路径取得 best.pt 并核对 SHA-256 后，可运行：
+
+```bash
+python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-config configs/m2_detection_bdd100k_yolo11s.yaml --max-frames 300 --output outputs/tracking/bdd-s-demo
+```
+
+此入口仍沿用原 M1；本轮白天 raw 是实验输入策略，未修改 M0/M1 产品逻辑。三套权重均未提交 Git，也未因五帧精度结果自动替换现有默认配置。

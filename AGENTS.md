@@ -20,7 +20,7 @@ Collaborators use separate servers and checkouts. Never assume another member's 
 | BDD100K input (I1/I2) | Working for 5-video subset only | `scripts/run_dataloader.py`; `src/twodups/data/` |
 | M0 data ingest (I1/I2) | BDD100K videos and KITTI Road single images supported; KITTI covered by synthetic tests, not real-data validation | `scripts/run_dataloader.py`; `src/twodups/data/` |
 | M1 preprocessing (I3) | Initial quality gate, denoising and CLAHE enhancement; thresholds uncalibrated | `scripts/run_m1_preprocess.py`; `src/twodups/modules/m1_preprocess/` |
-| M2 detection (I5) | YOLO11n and optional official COCO YOLO11m hashes pinned; GPU inference verified; sparse-frame engineering checks are not formal accuracy evaluation | `scripts/run_m2_detection.py --sample-id 359ce11c-e2f58b33 --max-frames 3`; `src/twodups/modules/m2_detection/` |
+| M2 detection (I5) | BDD100K-finetuned YOLO11n/s/m hashes pinned; 10-clip GPU tests; sparse-frame counts are not formal accuracy evaluation | `scripts/run_m2_detection.py --config configs/m2_detection_bdd100k.yaml --sample-id 359ce11c-e2f58b33 --max-frames 3`; `src/twodups/modules/m2_detection/` |
 | M3 segmentation; M5 integration; E evaluation | Planned / `NotImplementedError` | Do not report as working; implement one module at a time |
 | M4 tracking (I6) | BoT-SORT engineering profile (new=0.25, buffer=45), gated pixel GMC; ByteTrack baseline retained; no ReID or formal MOT evaluation | `scripts/run_m4_tracking.py`; `src/twodups/modules/m4_tracking/` |
 

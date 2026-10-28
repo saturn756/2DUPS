@@ -39,8 +39,8 @@ class YOLO11Detector:
         self.config_ref = config_ref
         self.root = root.resolve()
         detection_impl = config.get("impl", {}).get("detection", {})
-        if detection_impl.get("selected") not in {"yolo11n", "yolo11m"}:
-            raise ValueError("M2 detection adapter supports yolo11n and yolo11m")
+        if detection_impl.get("selected") not in {"yolo11n", "yolo11s", "yolo11m"}:
+            raise ValueError("M2 detection adapter supports yolo11n, yolo11s and yolo11m")
         self.params = config["params"]["detection"]
         if self.params.get("scope") != "full_frame" or self.params.get("frequency") != "every_frame":
             raise ValueError("M2 first detection pass requires full-frame, every-frame inference")
@@ -51,7 +51,7 @@ class YOLO11Detector:
             not isinstance(value.get("ref"), str) or not value["ref"]
             for key, value in self.class_map.items()
         ):
-            raise ValueError("M2 class_map requires COCO IDs, names and class refs")
+            raise ValueError("M2 class_map requires class IDs, names and class refs")
         self.score_threshold = float(self.params["score_threshold"])
         self.nms_iou = float(self.params["nms_iou"])
         self.input_size = int(self.params["input_size"])

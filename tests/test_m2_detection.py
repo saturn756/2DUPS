@@ -56,7 +56,7 @@ def _config():
     return load_module(REPO_ROOT / "configs/m2_detection.yaml")
 
 
-@pytest.mark.parametrize("selected", ["yolo11n", "yolo11m"])
+@pytest.mark.parametrize("selected", ["yolo11n", "yolo11s", "yolo11m"])
 def test_one_yolo11_detection_becomes_aligned_i5(selected) -> None:
     model = FakeModel(FakeBoxes([[2, 3, 20, 21]], [0.91], [2]))
     config = _config()
@@ -143,3 +143,19 @@ def test_unsupported_detector_is_rejected():
     config["impl"]["detection"]["selected"] = "unconfigured_model"
     with pytest.raises(ValueError, match="supports"):
         M2Detection(config)
+
+
+@pytest.mark.parametrize("path", [
+    "configs/m2_detection_bdd100k.yaml",
+    "configs/m2_detection_bdd100k_yolo11s.yaml",
+    "configs/m2_detection_bdd100k_yolo11m.yaml",
+])
+def test_bdd_variants_emit_traffic_light_and_sign_schema(path):
+    config = load_module(REPO_ROOT / path)
+    model = FakeModel(FakeBoxes([[2, 3, 10, 12], [15, 4, 29, 20]], [.9, .8], [8, 9]))
+    model.names = {0: "person", 1: "rider", 2: "car", 3: "truck", 4: "bus",
+                   5: "train", 6: "motor", 7: "bike", 8: "traffic light", 9: "traffic sign"}
+    result = M2Detection(config, model=model, config_ref=path).detect(*_input())
+    assert result.status is Status.OK
+    assert [o.class_ref for o in result.objects] == ["bdd100k.traffic_light", "bdd100k.traffic_sign"]
+    assert result.class_schema_ref == f"{path}#params.detection.class_map"

@@ -1,0 +1,56 @@
+# BDD100K-finetuned YOLO11m: https://huggingface.co/dronefreak/bdd100k-yolo11m
+# Pinned revision: a18548b1f1b7f0fc0c90c076ce742f4a3ecd64a4
+module: M2
+name: 多目标检测
+status: partial_detection
+impl:
+  detection:
+    selected: yolo11m
+io:
+  inputs:
+  - ImageVariantSet
+  outputs:
+  - DetectionSet
+params:
+  detection:
+    scope: full_frame
+    frequency: every_frame
+    checkpoint_path: checkpoints/m2_detection/yolo11m-bdd100k/v1/best.pt
+    checkpoint_sha256: aa001992dd96770ee9151ae9ae2f1e029ee0c9a834bfd93e68d1140f6b12c54f
+    device: 0
+    input_size: 640
+    score_threshold: 0.25
+    nms_iou: 0.7
+    max_detections: 300
+    class_map:
+      0:
+        name: person
+        ref: bdd100k.person
+      1:
+        name: rider
+        ref: bdd100k.rider
+      2:
+        name: car
+        ref: bdd100k.car
+      3:
+        name: truck
+        ref: bdd100k.truck
+      4:
+        name: bus
+        ref: bdd100k.bus
+      5:
+        name: train
+        ref: bdd100k.train
+      6:
+        name: motor
+        ref: bdd100k.motor
+      7:
+        name: bike
+        ref: bdd100k.bike
+      8:
+        name: traffic light
+        ref: bdd100k.traffic_light
+      9:
+        name: traffic sign
+        ref: bdd100k.traffic_sign
+producer_ref: m2.yolo11_detector
