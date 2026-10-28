@@ -56,9 +56,12 @@ def _config():
     return load_module(REPO_ROOT / "configs/m2_detection.yaml")
 
 
-def test_one_yolo11_detection_becomes_aligned_i5() -> None:
+@pytest.mark.parametrize("selected", ["yolo11n", "yolo11m"])
+def test_one_yolo11_detection_becomes_aligned_i5(selected) -> None:
     model = FakeModel(FakeBoxes([[2, 3, 20, 21]], [0.91], [2]))
-    module = M2Detection(_config(), model=model)
+    config = _config()
+    config["impl"]["detection"]["selected"] = selected
+    module = M2Detection(config, model=model)
     variants, images = _input()
     result = module.detect(variants, images)
     assert result.status is Status.OK
@@ -133,3 +136,10 @@ def test_missing_or_wrong_checkpoint_fails_without_model_loading(tmp_path) -> No
     weight.write_bytes(b"not a model")
     mismatch = detector.detect(*_input())
     assert mismatch.status is Status.FAILED and "checkpoint_sha256_mismatch" in mismatch.reason
+
+
+def test_unsupported_detector_is_rejected():
+    config = _config()
+    config["impl"]["detection"]["selected"] = "unconfigured_model"
+    with pytest.raises(ValueError, match="supports"):
+        M2Detection(config)

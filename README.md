@@ -61,7 +61,7 @@ python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --max-frames 300
 python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-config configs/m2_detection_bdd100k.yaml --max-frames 300 --output outputs/tracking/bdd-demo
 ```
 
-输出目录必须是仓库内的新目录，包含 `tracking.mp4`、I5/I6 JSONL、`motion.jsonl` 和有效配置。默认使用 `configs/m4_tracking_stable.yaml`：BoT-SORT（无需 ReID 权重）、背景光流运动补偿，车辆 car/truck/bus 共用关联组，最近 5 次观测进行分数加权类别投票（至少 3 票才切换）。使用锁定的 Ultralytics 8.3.184 与 `lap==0.5.12`，无新增依赖。跟踪入口保留 0.10 以上的检测用于低分恢复，新建轨迹阈值为 0.40；最近 5 个输出帧中至少 3 次高分匹配后确认 ID，候选框灰色显示。视频框使用 alpha=0.65 的因果平滑，I5/I6 框不被显示层修改。原有检测入口及 M0/M1 不变。
+输出目录必须是仓库内的新目录，包含 `tracking.mp4`、I5/I6 JSONL、`motion.jsonl` 和有效配置。默认使用 `configs/m4_tracking_stable.yaml`：BoT-SORT（无需 ReID 权重）、背景光流运动补偿，车辆 car/truck/bus 共用关联组，最近 5 次观测进行分数加权类别投票（至少 3 票才切换）。使用锁定的 Ultralytics 8.3.184 与 `lap==0.5.12`，无新增依赖。跟踪入口保留 0.10 以上的检测用于低分恢复，新建轨迹阈值为 0.25，丢失缓冲为 45 帧；最近 5 个输出帧中至少 3 次高分匹配后确认 ID，候选框灰色显示。视频框使用 alpha=0.65 的因果平滑，I5/I6 框不被显示层修改。原有检测入口及 M0/M1 不变。
 
 使用 `--tracking-config configs/m4_tracking.yaml` 可运行原 ByteTrack 基线（逐类关联、新建阈值 0.25、无运动补偿或显示平滑）。
 
@@ -101,3 +101,18 @@ python scripts/run_m2_detection.py --manifest data/raw/kitti_road/manifest.yaml 
 `docs/reference/` 是历史调研，不作为当前实现要求。数据、权重、日志和输出均放在被 Git 忽略的目录中。
 
 许可证见 [LICENSE](LICENSE)。
+
+## 检测跟踪第一轮工程调参
+
+已完成 5 个来源视频、10 个片段的对照；6 段调参、4 段来源隔离验证，白天固定 raw、夜间保留 M1 输出。暂定新建阈值 0.25、缓冲 45 帧，提高了检测保留，尚未证明身份准确率改善。[样本、参数与结果](docs/experiments/09_检测跟踪工程调参.md)。raw 策略仅用于实验，不修改 M0/M1 产品入口。
+
+可选较大 COCO 预训练模型（未替换默认权重）：
+
+```bash
+mkdir -p checkpoints/m2_detection/yolo11m/v1
+curl -fL https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11m.pt -o checkpoints/m2_detection/yolo11m/v1/yolo11m.pt
+sha256sum checkpoints/m2_detection/yolo11m/v1/yolo11m.pt
+python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-config configs/m2_detection_yolo11m.yaml --max-frames 300 --output outputs/tracking/coco-m-demo
+```
+
+SHA-256 与配置值比较；适配器强制校验权重和类别模式。COCO m 没有泛交通标志类别，不能直接代替 BDD100K 专用 n 权重。

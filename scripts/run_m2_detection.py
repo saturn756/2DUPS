@@ -38,7 +38,8 @@ def main() -> int:
     detection_config = load_module(config_path)
     params = detection_config["params"]["detection"]
     if args.dry_run:
-        print(f"M2 detection=yolo11n; checkpoint={params['checkpoint_path'] or 'not configured'}; "
+        print(f"M2 detection={detection_config['impl']['detection']['selected']}; "
+              f"checkpoint={params['checkpoint_path'] or 'not configured'}; "
               "M4 tracking=separate module; no download")
         return 0
     if not args.sample_id:

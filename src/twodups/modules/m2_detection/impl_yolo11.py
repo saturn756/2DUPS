@@ -39,8 +39,8 @@ class YOLO11Detector:
         self.config_ref = config_ref
         self.root = root.resolve()
         detection_impl = config.get("impl", {}).get("detection", {})
-        if detection_impl.get("selected") != "yolo11n":
-            raise ValueError("M2 detection adapter supports only yolo11n")
+        if detection_impl.get("selected") not in {"yolo11n", "yolo11m"}:
+            raise ValueError("M2 detection adapter supports yolo11n and yolo11m")
         self.params = config["params"]["detection"]
         if self.params.get("scope") != "full_frame" or self.params.get("frequency") != "every_frame":
             raise ValueError("M2 first detection pass requires full-frame, every-frame inference")

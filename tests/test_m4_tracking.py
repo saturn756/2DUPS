@@ -238,3 +238,13 @@ def test_tiny_image_does_not_crash_gmc():
     matrix, report = MotionCompensator().update(np.zeros((1,1,3),np.uint8), [])
     assert not report["used"] and report["reason"] == "gmc_small_image"
     np.testing.assert_array_equal(matrix, np.eye(2,3))
+
+
+def test_stable_profile_keeps_moderate_score_target_until_confirmation():
+    t=stable()
+    rows=[("car",CAR[1],.30)]
+    first=t.update(detections(0,rows),frame_index=0).tracks[0]
+    assert first.state is TrackState.NEW
+    assert t.update(detections(1,rows),frame_index=1).tracks[0].track_id==first.track_id
+    third=t.update(detections(2,rows),frame_index=2).tracks[0]
+    assert third.track_id==first.track_id and third.state is TrackState.TRACKED

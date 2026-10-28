@@ -1,4 +1,5 @@
-# Stability profile; the original configs/m4_tracking.yaml remains the ByteTrack baseline.
+# Engineering profile: 6 tuning clips + 4 source-disjoint validation clips.
+# See docs/experiments/09_检测跟踪工程调参.md; ByteTrack baseline is retained.
 module: M4
 name: 多目标跟踪稳定版
 status: initial_implementation
@@ -10,8 +11,8 @@ io:
 params:
   track_high_thresh: 0.25
   track_low_thresh: 0.10
-  new_track_thresh: 0.40
-  track_buffer: 30
+  new_track_thresh: 0.25
+  track_buffer: 45
   match_thresh: 0.80
   fuse_score: true
   use_geometry: true
