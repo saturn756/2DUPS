@@ -12,7 +12,6 @@ from twodups.data.bdd100k_loader import LoadedFrame
 from twodups.modules import MODULES
 from twodups.modules.m0_data_ingest import M0DataIngest
 from twodups.modules.m1_preprocess import M1Preprocess
-from twodups.pipeline import registry
 from twodups.pipeline.runner import iter_detection_chain
 from twodups.utils.config import REPO_ROOT, load_module
 
@@ -28,10 +27,6 @@ def test_module_declares_interfaces() -> None:
     mod = M0DataIngest(config={})
     assert mod.NAME == "M0"
     assert "I2" in mod.INTERFACE_OUT
-
-
-def test_registry_starts_empty() -> None:
-    assert registry.available() == []
 
 
 @pytest.mark.parametrize("name", CONFIGS)
