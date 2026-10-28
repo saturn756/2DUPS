@@ -10,7 +10,7 @@
 - M1：RGB 校验、质量评价、去噪和 CLAHE 低照度增强可用，阈值仍是初始值。
 - M2：官方 YOLO11n 检测适配器可用，已在一台服务器验证真实 GPU 推理，未做精度评测。
 - M3：语义/车道分割接口和配置骨架已建立，算法待接入。
-- M4：最小同类 IoU tracking-by-detection 已实现，尚未进行正式跟踪评测。
+- M4：已接入 Ultralytics ByteTrack，按类别独立关联并输出 I6，支持 ID、丢失与恢复；尚未进行正式跟踪评测。
 - M5、E：接口和配置骨架已建立，算法和指标实现待补齐。
 
 ## 开始开发
@@ -53,6 +53,25 @@ python scripts/run_m2_detection.py --sample-id 359ce11c-e2f58b33 --start-frame 3
 ```
 
 第二条命令输出 I5 JSON，用于检查真实检测框和接口对齐，不计算准确率。`python scripts/run_pipeline.py --module-config configs/m2_detection.yaml --dry-run` 只解析配置。
+
+## 检测与 ByteTrack 跟踪
+
+```bash
+python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --max-frames 300 --output outputs/tracking/coco-demo
+python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-config configs/m2_detection_bdd100k.yaml --max-frames 300 --output outputs/tracking/bdd-demo
+```
+
+输出目录必须是仓库内的新目录，包含 `tracking.mp4`、I5/I6 JSONL 和有效配置。ByteTrack 不需要额外权重，使用锁定的 Ultralytics 8.3.184 与 `lap==0.5.12`。跟踪入口将 M2 置信度阈值设为 `track_low_thresh=0.10` 并保存有效配置，以保留第二阶段关联所需的低分框；默认 0.25 以上的检测才能建立新轨迹。原有检测入口及 M0/M1 不变。
+
+BDD100K 微调权重按 `configs/m2_detection_bdd100k.yaml` 的路径与哈希单独取得：
+
+```bash
+mkdir -p checkpoints/m2_detection/yolo11n-bdd100k/v1
+curl -fL https://huggingface.co/dronefreak/bdd100k-yolo11n/resolve/2b5554133522f96f50ce87a4df0a2de556e4b7ad/best.pt -o checkpoints/m2_detection/yolo11n-bdd100k/v1/best.pt
+sha256sum checkpoints/m2_detection/yolo11n-bdd100k/v1/best.pt
+```
+
+M4 必须逐帧调用，运行时 `frame_index` 来自 I2；跳帧或倒序会被拒绝。序列切换、图像版本、坐标、尺寸或类别模式改变会重置关联。丢失轨迹仅输出状态和历史检测引用，不绘制旧框。当前不使用几何补偿或 ReID，KITTI Road 独立图片不能用于跟踪验证。
 
 ## KITTI Road 图片输入
 

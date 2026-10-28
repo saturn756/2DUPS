@@ -1,20 +1,18 @@
-# M4 tracking-by-detection 第一版：只依赖 I5，几何补偿是可选输入。
+# Ultralytics 8.3.184 ByteTrack; independent association per class.
 module: M4
 name: 多目标跟踪
 status: initial_implementation
-
 impl:
-  association: iou_greedy
-  motion_compensation: optional
-
+  association: bytetrack
 io:
   inputs: [DetectionSet, MatchResult_optional]
   outputs: [TrackSet]
-
 params:
-  match_iou_threshold: 0.2
-  max_lost_frames: 30
-  reset_on_sequence_change: true
+  track_high_thresh: 0.25
+  track_low_thresh: 0.10
+  new_track_thresh: 0.25
+  track_buffer: 30
+  match_thresh: 0.80
+  fuse_score: true
   use_geometry: false
-
-producer_ref: m4.iou_tracker
+producer_ref: m4.ultralytics_bytetrack

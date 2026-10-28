@@ -25,6 +25,7 @@ matplotlib
 torch==2.8.0+cu128
 torchvision==0.23.0+cu128
 ultralytics==8.3.184     # YOLO11n 检测适配器；不包含模型权重
+lap==0.5.12             # Ultralytics ByteTrack linear assignment
 
 # ---- M3 语义/车道分割 ----
 # （PIDNet 以官方仓库为准，按需引入）
