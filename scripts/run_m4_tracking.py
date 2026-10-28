@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""M0 -> M1 -> M2 -> ByteTrack; export I5/I6 JSONL and an H.264 preview."""
+"""M0 -> M1 -> M2 -> M4; export I5/I6 JSONL and an H.264 preview."""
 from __future__ import annotations
 import argparse
 from contextlib import ExitStack
@@ -9,7 +9,6 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import av
-import cv2
 import yaml
 
 from twodups.contracts import Status, to_wire
@@ -18,29 +17,9 @@ from twodups.modules.m0_data_ingest import M0DataIngest
 from twodups.modules.m1_preprocess import M1Preprocess
 from twodups.modules.m2_detection import M2Detection
 from twodups.modules.m4_tracking import M4Tracking
+from twodups.modules.m4_tracking.render import TrackRenderer
 from twodups.pipeline.runner import iter_m0_m1_m2_chain
 from twodups.utils.config import REPO_ROOT, load_module
-
-
-def annotate(rgb, tracks, frame_index):
-    image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-    visible = 0
-    for track in tracks.tracks:
-        if track.current_bbox is None:
-            continue
-        visible += 1
-        number = int(track.track_id.rsplit(":", 1)[1])
-        color = ((number * 67) % 180 + 60, (number * 97) % 180 + 60, (number * 37) % 180 + 60)
-        box = track.current_bbox
-        x1,y1,x2,y2 = (int(round(v)) for v in (box.x1,box.y1,box.x2,box.y2))
-        cv2.rectangle(image,(x1,y1),(x2,y2),color,2)
-        name = track.class_ref.split(".",1)[-1].replace("_"," ")
-        cv2.putText(image,f"ID {number} {name} {track.confidence:.2f}",
-                    (max(0,x1),max(62,y1-5)),cv2.FONT_HERSHEY_SIMPLEX,.48,color,1,cv2.LINE_AA)
-    cv2.rectangle(image,(0,0),(image.shape[1],45),(20,20,20),-1)
-    cv2.putText(image,f"YOLO11n + ByteTrack | frame {frame_index} | visible {visible} | {tracks.status.value}",
-                (10,28),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1,cv2.LINE_AA)
-    return image
 
 
 def main():
@@ -48,7 +27,7 @@ def main():
     parser.add_argument("--sample-id", required=True)
     parser.add_argument("--manifest", type=Path, default=REPO_ROOT/"configs/dataset_manifest.yaml")
     parser.add_argument("--detection-config", type=Path, default=REPO_ROOT/"configs/m2_detection.yaml")
-    parser.add_argument("--tracking-config", type=Path, default=REPO_ROOT/"configs/m4_tracking.yaml")
+    parser.add_argument("--tracking-config", type=Path, default=REPO_ROOT/"configs/m4_tracking_stable.yaml")
     parser.add_argument("--max-frames", type=int, default=300)
     parser.add_argument("--output", type=Path, required=True, help="New output directory inside repository")
     args = parser.parse_args()
@@ -78,22 +57,29 @@ def main():
     config_path.write_text(yaml.safe_dump(detector_config,allow_unicode=True,sort_keys=False))
     (output/"tracking.config.yaml").write_text(yaml.safe_dump(tracker.config,allow_unicode=True,sort_keys=False))
     detector = M2Detection(detector_config,config_ref=config_path.relative_to(REPO_ROOT).as_posix())
-    frames = failures = 0
+    renderer = TrackRenderer(tracker.config.get("display", {}).get("smoothing_alpha", 1.0))
+    frames = failures = gmc_used = 0
+    confirmed_identities = set()
     identities = set()
     with ExitStack() as stack:
         video = stack.enter_context(av.open(str(output/"tracking.mp4"),"w",options={"movflags":"+faststart"}))
         detection_log = stack.enter_context((output/"detections.jsonl").open("w"))
         track_log = stack.enter_context((output/"tracks.jsonl").open("w"))
+        motion_log = stack.enter_context((output/"motion.jsonl").open("w"))
         stream = None
         for step in iter_m0_m1_m2_chain(M0DataIngest(),manifest,M1Preprocess(),detector,
                                         args.sample_id,max_frames=args.max_frames):
             index = step.frame.metadata.frame_index
-            tracks = tracker.update(step.detections,frame_index=index)
+            tracks = tracker.update(step.detections,frame_index=index,
+                                    image_rgb=step.processed.default_image_rgb)
+            motion_log.write(json.dumps({"frame_id":tracks.frame_id,**tracker.last_motion})+"\n")
+            gmc_used += tracks.association.motion_compensation_used
+            confirmed_identities.update(t.track_id for t in tracks.tracks if t.state.value == "tracked")
             detection_log.write(json.dumps(to_wire(step.detections),ensure_ascii=False)+"\n")
             track_log.write(json.dumps(to_wire(tracks),ensure_ascii=False)+"\n")
             failures += tracks.status is not Status.OK
             identities.update(t.track_id for t in tracks.tracks)
-            image = annotate(step.processed.default_image_rgb,tracks,index)
+            image = renderer.draw(step.processed.default_image_rgb,tracks,index)
             if stream is None:
                 stream = video.add_stream("libx264",rate=rate)
                 stream.height,stream.width = image.shape[:2]
@@ -111,6 +97,7 @@ def main():
     with av.open(str(output/"tracking.mp4")) as saved:
         assert sum(1 for _ in saved.decode(video=0)) == frames
     summary = {"frames":frames,"fps":float(rate),"unique_tracks":len(identities),"failed_frames":failures,
+               "confirmed_tracks":len(confirmed_identities),"gmc_used_frames":gmc_used,
                "detector_config":config_path.relative_to(REPO_ROOT).as_posix(),
                "video":(output/"tracking.mp4").relative_to(REPO_ROOT).as_posix()}
     (output/"summary.json").write_text(json.dumps(summary,indent=2))

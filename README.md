@@ -10,7 +10,7 @@
 - M1：RGB 校验、质量评价、去噪和 CLAHE 低照度增强可用，阈值仍是初始值。
 - M2：官方 YOLO11n 检测适配器可用，已在一台服务器验证真实 GPU 推理，未做精度评测。
 - M3：语义/车道分割接口和配置骨架已建立，算法待接入。
-- M4：已接入 Ultralytics ByteTrack，按类别独立关联并输出 I6，支持 ID、丢失与恢复；尚未进行正式跟踪评测。
+- M4：已接入 Ultralytics BoT-SORT 稳定配置及 ByteTrack 基线，输出 I6；支持背景运动补偿、车辆细类稳定与丢失恢复，尚未进行正式跟踪评测。
 - M5、E：接口和配置骨架已建立，算法和指标实现待补齐。
 
 ## 开始开发
@@ -54,14 +54,16 @@ python scripts/run_m2_detection.py --sample-id 359ce11c-e2f58b33 --start-frame 3
 
 第二条命令输出 I5 JSON，用于检查真实检测框和接口对齐，不计算准确率。`python scripts/run_pipeline.py --module-config configs/m2_detection.yaml --dry-run` 只解析配置。
 
-## 检测与 ByteTrack 跟踪
+## 检测与稳定跟踪
 
 ```bash
 python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --max-frames 300 --output outputs/tracking/coco-demo
 python scripts/run_m4_tracking.py --sample-id 359ce11c-e2f58b33 --detection-config configs/m2_detection_bdd100k.yaml --max-frames 300 --output outputs/tracking/bdd-demo
 ```
 
-输出目录必须是仓库内的新目录，包含 `tracking.mp4`、I5/I6 JSONL 和有效配置。ByteTrack 不需要额外权重，使用锁定的 Ultralytics 8.3.184 与 `lap==0.5.12`。跟踪入口将 M2 置信度阈值设为 `track_low_thresh=0.10` 并保存有效配置，以保留第二阶段关联所需的低分框；默认 0.25 以上的检测才能建立新轨迹。原有检测入口及 M0/M1 不变。
+输出目录必须是仓库内的新目录，包含 `tracking.mp4`、I5/I6 JSONL、`motion.jsonl` 和有效配置。默认使用 `configs/m4_tracking_stable.yaml`：BoT-SORT（无需 ReID 权重）、背景光流运动补偿，车辆 car/truck/bus 共用关联组，最近 5 次观测进行分数加权类别投票（至少 3 票才切换）。使用锁定的 Ultralytics 8.3.184 与 `lap==0.5.12`，无新增依赖。跟踪入口保留 0.10 以上的检测用于低分恢复，新建轨迹阈值为 0.40；最近 5 个输出帧中至少 3 次高分匹配后确认 ID，候选框灰色显示。视频框使用 alpha=0.65 的因果平滑，I5/I6 框不被显示层修改。原有检测入口及 M0/M1 不变。
+
+使用 `--tracking-config configs/m4_tracking.yaml` 可运行原 ByteTrack 基线（逐类关联、新建阈值 0.25、无运动补偿或显示平滑）。
 
 BDD100K 微调权重按 `configs/m2_detection_bdd100k.yaml` 的路径与哈希单独取得：
 
@@ -71,7 +73,7 @@ curl -fL https://huggingface.co/dronefreak/bdd100k-yolo11n/resolve/2b5554133522f
 sha256sum checkpoints/m2_detection/yolo11n-bdd100k/v1/best.pt
 ```
 
-M4 必须逐帧调用，运行时 `frame_index` 来自 I2；跳帧或倒序会被拒绝。序列切换、图像版本、坐标、尺寸或类别模式改变会重置关联。丢失轨迹仅输出状态和历史检测引用，不绘制旧框。当前不使用几何补偿或 ReID，KITTI Road 独立图片不能用于跟踪验证。
+M4 必须逐帧调用，运行时 `frame_index` 来自 I2；跳帧或倒序会被拒绝。序列切换、图像版本、坐标、尺寸或类别模式改变会重置关联。丢失轨迹仅输出状态和历史检测引用，不绘制旧框。稳定版另传与 I5 同版本的 RGB，在移动目标框外估计背景运动；光流、RANSAC 或运动幅度检查失败时使用单位变换并记录原因。该图像平面补偿在 M4 内计算，不生成或使用外部 I4，不改变输入图像。首帧/版本切换不补偿；`motion.jsonl` 记录帧对、矩阵和质量诊断，I6 只在实际采用有效估计时标记补偿。仍未使用 ReID，单一全局变换不能消除深度视差，KITTI Road 独立图片不能用于跟踪验证。
 
 ## KITTI Road 图片输入
 

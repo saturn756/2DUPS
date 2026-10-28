@@ -1,0 +1,22 @@
+# Stability profile; the original configs/m4_tracking.yaml remains the ByteTrack baseline.
+module: M4
+name: 多目标跟踪稳定版
+status: initial_implementation
+impl:
+  association: botsort
+io:
+  inputs: [DetectionSet, rgb_runtime_carrier, MatchResult_optional]
+  outputs: [TrackSet]
+params:
+  track_high_thresh: 0.25
+  track_low_thresh: 0.10
+  new_track_thresh: 0.40
+  track_buffer: 30
+  match_thresh: 0.80
+  fuse_score: true
+  use_geometry: true
+  merge_vehicle_classes: true
+  min_confirmations: 3
+display:
+  smoothing_alpha: 0.65
+producer_ref: m4.ultralytics_botsort
