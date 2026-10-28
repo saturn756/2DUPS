@@ -15,9 +15,10 @@ from typing import Iterator
 import av
 import numpy as np
 
-from ..contracts.base import CalibrationState, CalibrationStatus, Ref
+from ..contracts.base import Ref
 from ..contracts.i1_dataset_manifest import DatasetManifest, Sample
 from ..contracts.i2_calibrated_frame import CalibratedFrame, ImageSize
+from .calibration import CalibrationResolver
 from ..utils.config import REPO_ROOT
 
 
@@ -48,10 +49,27 @@ class LoadedFrame:
 
 def rotation_from_display_matrix(frame: av.VideoFrame) -> int:
     """Return clockwise degrees from FFmpeg's MOV display matrix."""
-    for item in frame.side_data:
-        if item.type.name != "DISPLAYMATRIX":
+    side_data = getattr(frame, "side_data", None)
+    if side_data is None:
+        return 0
+    for item in side_data:
+        item_type = getattr(item, "type", None)
+        if item_type is not None:
+            type_name = getattr(item_type, "name", str(item_type))
+            payload = bytes(item)
+        else:
+            # PyAV 19 iterates the side-data mapping by enum keys, while
+            # PyAV 18 iterates SideData payloads. Support both APIs without
+            # relying on the presence of ``items()``.
+            type_name = getattr(item, "name", str(item).split(".")[-1])
+            getter = getattr(side_data, "get", None)
+            value = getter(item) if getter is not None else None
+            payload = bytes(value) if value is not None else None
+        if type_name != "DISPLAYMATRIX":
             continue
-        values = struct.unpack("<9i", bytes(item))
+        if payload is None or len(payload) != 36:
+            raise ValueError("DISPLAYMATRIX side-data has no valid payload")
+        values = struct.unpack("<9i", payload)
         angle = math.degrees(math.atan2(values[1], values[0]))
         quarter_turns = round(angle / 90)
         if abs(angle - 90 * quarter_turns) > 1:
@@ -105,6 +123,7 @@ class BDD100KVideoLoader:
         self.manifest = manifest
         self.root = Path(root).resolve()
         self.samples = {sample.sample_id: sample for sample in manifest.samples}
+        self.calibration = CalibrationResolver(self.root)
 
     def iter_split(self, split: str, max_frames_per_sequence: int | None = None) -> Iterator[LoadedFrame]:
         """Yield all frames in split order, closing each video before the next."""
@@ -166,10 +185,7 @@ class BDD100KVideoLoader:
                 image_size=ImageSize(width=width, height=height),
                 media_ref=Ref(uri=f"{sample.media_ref.uri}#frame={index}", kind="video_frame"),
                 coordinate_space="pixel",
-                calibration=CalibrationState(
-                    status=CalibrationStatus.MISSING,
-                    reason="dataset_does_not_provide_verified_calibration",
-                ),
+                calibration=self.calibration.state(sample, ImageSize(width=width, height=height)),
                 camera_id="camera_front",
                 timestamp=timestamp,
                 source_timestamp=source_timestamp,

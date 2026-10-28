@@ -4,16 +4,20 @@ name: 数据接入与标准化
 status: partial
 
 impl:
-  adapters: [bdd100k_video_loader, kitti, cityscapes, culane, mot]
-  calibration: optional_metadata   # 无已验证内参时输出 missing
+  adapters: [bdd100k, bdd100k_image, image_sequence, kitti_road]
+  planned_adapters: [kitti_tracking, cityscapes, culane, mot]
+  calibration: optional_metadata   # KITTI Road 可由 calib/P2 生成 valid/stale；其余无验证内参时输出 missing
   storage: local_repository
-  service: validate_export_visualize
+  service: [validate_manifest, export_i2, visualize_i1]
 
 io:
   inputs: [image_sequence, camera_params_optional, dataset_manifest]
   outputs: [CalibratedFrame, DatasetManifest]     # I2 / I1
 
 params:
+  split: train
+  sample_id: null
+  max_frames: null
   calibration_status: [valid, missing, stale]
 
-producer_ref: m0.bdd100k_adapter
+producer_ref: m0.data_ingest

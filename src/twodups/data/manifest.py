@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
+from typing import Any, Mapping
 
 import yaml
 
@@ -20,16 +22,65 @@ def _ref(value: dict | None, field: str) -> Ref | None:
     return Ref(uri=value["uri"], kind=value.get("kind", "file"), checksum=value.get("checksum"))
 
 
-def load(path: str | Path) -> DatasetManifest:
-    """Load a YAML manifest; fill and verify its canonical content checksum."""
+def canonical_checksum(content: Mapping[str, Any]) -> str:
+    """Return the checksum of manifest content, excluding the checksum field."""
+    body = {key: value for key, value in content.items() if key != "checksum"}
+    encoded = json.dumps(body, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+def _ref_to_dict(ref: Ref | None) -> dict[str, Any] | None:
+    if ref is None:
+        return None
+    result: dict[str, Any] = {"uri": ref.uri, "kind": ref.kind}
+    if ref.checksum is not None:
+        result["checksum"] = ref.checksum
+    return result
+
+
+def to_dict(manifest: DatasetManifest, *, include_checksum: bool = True) -> dict[str, Any]:
+    """Convert I1 to YAML/JSON data while omitting unset optional fields."""
+    payload: dict[str, Any] = {
+        "manifest_id": manifest.manifest_id,
+        "version": manifest.version,
+        "schema_version": manifest.schema_version,
+        "source": manifest.source,
+        "license": manifest.license,
+        "producer_ref": manifest.producer_ref,
+        "config_ref": manifest.config_ref,
+        "splits": manifest.splits,
+        "samples": [],
+    }
+    for sample in manifest.samples:
+        row: dict[str, Any] = {
+            "sample_id": sample.sample_id,
+            "sequence_id": sample.sequence_id,
+            "media_ref": _ref_to_dict(sample.media_ref),
+        }
+        for key, value in (
+            ("annotation_ref", _ref_to_dict(sample.annotation_ref)),
+            ("timestamp", sample.timestamp),
+            ("slice_tags", sample.slice_tags),
+            ("fps", sample.fps),
+            ("calibration_ref", _ref_to_dict(sample.calibration_ref)),
+        ):
+            if value is not None and value != []:
+                row[key] = value
+        payload["samples"].append(row)
+    if include_checksum and manifest.checksum is not None:
+        payload["checksum"] = manifest.checksum
+    return payload
+
+
+def load(path: str | Path, *, verify_checksum: bool = True) -> DatasetManifest:
+    """Load a YAML manifest and optionally verify its canonical checksum."""
     path = Path(path)
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ValueError(f"Manifest must be a YAML mapping: {path}")
-    content = {key: value for key, value in raw.items() if key != "checksum"}
-    encoded = json.dumps(content, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
-    checksum = "sha256:" + hashlib.sha256(encoded).hexdigest()
-    if raw.get("checksum") not in (None, checksum):
+    checksum = canonical_checksum(raw)
+    if verify_checksum and raw.get("checksum") not in (None, checksum):
         raise ValueError(f"Manifest checksum mismatch: {path}")
 
     sample_rows = raw.get("samples")
@@ -49,6 +100,8 @@ def load(path: str | Path) -> DatasetManifest:
             annotation_ref=_ref(row.get("annotation_ref"), "annotation_ref"),
             timestamp=row.get("timestamp"),
             slice_tags=list(row.get("slice_tags", [])),
+            fps=row.get("fps"),
+            calibration_ref=_ref(row.get("calibration_ref"), "calibration_ref"),
         ))
     manifest = DatasetManifest(
         manifest_id=raw["manifest_id"],
@@ -66,6 +119,42 @@ def load(path: str | Path) -> DatasetManifest:
     if problems:
         raise ValueError("Invalid manifest: " + "; ".join(problems))
     return manifest
+
+
+def dump(manifest: DatasetManifest, path: str | Path,
+         *, header: list[str] | None = None) -> str:
+    """Write a canonical YAML manifest and return its content checksum."""
+    problems = validate(manifest)
+    if problems:
+        raise ValueError("Invalid manifest: " + "; ".join(problems))
+    path = Path(path)
+    content = to_dict(manifest, include_checksum=False)
+    checksum = canonical_checksum(content)
+    payload = dict(content)
+    payload["checksum"] = checksum
+    text = yaml.safe_dump(payload, allow_unicode=True, sort_keys=False,
+                          default_flow_style=False)
+    prefix = ""
+    if header:
+        prefix = "\n".join(header).rstrip() + "\n"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(prefix + text, encoding="utf-8", newline="\n")
+    manifest.checksum = checksum
+    return checksum
+
+
+def rewrite(path: str | Path) -> str:
+    """Recompute a manifest checksum while preserving its leading comments."""
+    path = Path(path)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    header: list[str] = []
+    for line in lines:
+        if line.startswith("#") or not line.strip():
+            header.append(line)
+        else:
+            break
+    manifest = load(path, verify_checksum=False)
+    return dump(manifest, path, header=header or None)
 
 
 def validate(manifest: DatasetManifest) -> list[str]:
@@ -90,6 +179,17 @@ def validate(manifest: DatasetManifest) -> list[str]:
             problems.append(f"sample {sample.sample_id} missing media_ref")
         if not all(isinstance(tag, str) and tag for tag in sample.slice_tags):
             problems.append(f"sample {sample.sample_id} has invalid slice_tags")
+        if len(sample.slice_tags) != len(set(sample.slice_tags)):
+            problems.append(f"sample {sample.sample_id} repeats a slice_tag")
+        if sample.fps is not None:
+            if isinstance(sample.fps, bool) or not isinstance(sample.fps, (int, float)) \
+                    or not math.isfinite(float(sample.fps)) or not 0 < float(sample.fps) < 1000:
+                problems.append(f"sample {sample.sample_id} has invalid fps")
+        if manifest.source == "image_sequence" or sample.media_ref.kind == "image_sequence":
+            if sample.fps is None:
+                problems.append(f"sample {sample.sample_id} has no fps")
+        if sample.calibration_ref is not None and sample.calibration_ref.kind != "camera_params":
+            problems.append(f"sample {sample.sample_id} calibration_ref.kind must be 'camera_params'")
     if not isinstance(manifest.splits, dict) or not manifest.splits:
         problems.append("missing splits")
     else:
@@ -104,4 +204,52 @@ def validate(manifest: DatasetManifest) -> list[str]:
                 if member in assigned and assigned[member] != split:
                     problems.append(f"sample {member} occurs in both {assigned[member]} and {split}")
                 assigned[member] = split
+        for sample_id in sample_ids:
+            if sample_id not in assigned:
+                problems.append(f"sample {sample_id} is not assigned to any split")
+    return problems
+
+
+def _resolve_media(root: Path, uri: str) -> Path:
+    candidate = (root / uri).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        raise ValueError(f"reference escapes the repository: {uri}")
+    return candidate
+
+
+def _check_ref(ref: Ref, *, root: Path, label: str) -> list[str]:
+    try:
+        path = _resolve_media(root, ref.uri)
+    except ValueError as exc:
+        return [f"{label} {exc}"]
+    if ref.kind == "image_sequence":
+        if not path.is_dir():
+            return [f"{label} is not a directory: {ref.uri}"]
+    else:
+        if not path.is_file():
+            return [f"{label} is missing: {ref.uri}"]
+        if path.stat().st_size == 0:
+            return [f"{label} is empty: {ref.uri}"]
+    if ref.checksum is not None and path.is_file():
+        digest = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != ref.checksum:
+            return [f"{label} checksum mismatch: {ref.uri}"]
+    return []
+
+
+def validate_media(manifest: DatasetManifest, *, root: str | Path) -> list[str]:
+    """Check media references without decoding images or videos."""
+    root_path = Path(root).resolve()
+    problems: list[str] = []
+    for sample in manifest.samples:
+        problems.extend(_check_ref(sample.media_ref, root=root_path,
+                                   label=f"sample {sample.sample_id} media"))
+        if sample.annotation_ref is not None:
+            problems.extend(_check_ref(sample.annotation_ref, root=root_path,
+                                       label=f"sample {sample.sample_id} annotation"))
+        if sample.calibration_ref is not None:
+            problems.extend(_check_ref(sample.calibration_ref, root=root_path,
+                                       label=f"sample {sample.sample_id} calibration"))
     return problems
